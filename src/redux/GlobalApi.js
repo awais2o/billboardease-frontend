@@ -1,7 +1,9 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import Cookies from 'js-cookie'
+// import jwt from 'jsonwebtoken'
 
 const baseUrl = process.env.REACT_APP_API_URL
+const JWT_SECRET = process.env.REACT_APP_KEY
 // const credentials = process.env.REACT_APP_API_CREDENTIALS
 
 const createRequest = url => ({
@@ -33,9 +35,14 @@ const createUpdateRequest = (url, data) => ({
 const customBaseQuery = fetchBaseQuery({
   baseUrl,
   prepareHeaders: (headers, { getState }) => {
-    const authToken = Cookies.get('Authorization') // Ensure this is the correct key where the token is stored
-    if (authToken) {
-      headers.set('Authorization', `Bearer ${authToken}`)
+    // const id = Cookies.get('user_id')
+    const authtoken = Cookies.get('Authorization')
+    // const payload = { user_id: id }
+    // const token = jwt.sign(payload, JWT_SECRET)
+    console.log(authtoken)
+
+    if (authtoken) {
+      headers.set('Authorization', `${authtoken}`)
     }
     return headers
   }
@@ -63,9 +70,13 @@ export const GlobalApi = createApi({
     register: builder.mutation({
       query: ({ input }) => createPostRequest('/auth/register/', input)
       // You may include additional mutations or queries here using your predefined functions
+    }),
+    getBillboard: builder.query({
+      query: () => createRequest('/billboard'),
+      providesTags: ['billboard']
     })
     // Other endpoints using predefined request functions
   })
 })
 
-export const { useRegisterMutation } = GlobalApi
+export const { useRegisterMutation, useGetBillboardQuery } = GlobalApi
