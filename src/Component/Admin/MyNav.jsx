@@ -26,6 +26,13 @@ const MyNav = () => {
               >
                 Billboards
               </Nav.Link>
+              <Nav.Link
+                onClick={() => {
+                  nav('/allusers')
+                }}
+              >
+                All User
+              </Nav.Link>
             </Nav>
             <Nav>
               <Nav.Link

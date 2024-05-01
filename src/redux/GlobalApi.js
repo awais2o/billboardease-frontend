@@ -71,12 +71,55 @@ export const GlobalApi = createApi({
       query: ({ input }) => createPostRequest('/auth/register/', input)
       // You may include additional mutations or queries here using your predefined functions
     }),
+    login: builder.mutation({
+      query: ({ input }) => createPostRequest('/auth/login/', input)
+      // You may include additional mutations or queries here using your predefined functions
+    }),
     getBillboard: builder.query({
       query: () => createRequest('/billboard'),
       providesTags: ['billboard']
+    }),
+    postBillboard: builder.mutation({
+      query: ({ input }) => createPostRequest('/billboard', input),
+      invalidatesTags: ['billboard']
+    }),
+    updateBillboard: builder.mutation({
+      query: ({ input, id }) => createUpdateRequest(`/billboard/${id}`, input),
+      invalidatesTags: ['billboard']
+    }),
+    deleteBillboard: builder.mutation({
+      query: ({ id }) => createDeleteRequest(`/billboard/${id}`),
+      invalidatesTags: ['billboard']
+    }),
+    getTags: builder.query({
+      query: () => createRequest('/tags'),
+      providesTags: ['tags']
+    }),
+    getAllUsers: builder.query({
+      query: () => createRequest('/allusers'),
+      providesTags: ['allusers']
+    }),
+    banUser: builder.mutation({
+      query: ({ id }) => createUpdateRequest(`/allusers/ban/${id}`),
+      invalidatesTags: ['allusers']
+    }),
+    unbanUser: builder.mutation({
+      query: ({ id }) => createUpdateRequest(`/allusers/unban/${id}`),
+      invalidatesTags: ['allusers']
     })
     // Other endpoints using predefined request functions
   })
 })
 
-export const { useRegisterMutation, useGetBillboardQuery } = GlobalApi
+export const {
+  useRegisterMutation,
+  useLoginMutation,
+  useGetBillboardQuery,
+  useGetTagsQuery,
+  usePostBillboardMutation,
+  useDeleteBillboardMutation,
+  useUpdateBillboardMutation,
+  useGetAllUsersQuery,
+  useBanUserMutation,
+  useUnbanUserMutation
+} = GlobalApi
