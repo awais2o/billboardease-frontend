@@ -5,41 +5,74 @@ import Cookies from 'js-cookie'
 
 const MyNav = () => {
   const nav = useNavigate()
+  const role = localStorage.getItem('role')
+  console.log({ role })
   return (
     <>
       <Navbar collapseOnSelect expand='lg' className='bg-body-tertiary'>
         <Container>
           <Navbar.Brand
             onClick={() => {
-              nav('/admin')
+              ;+role === 1 ? nav('/admin') : nav('/advertise')
             }}
           >
             BillboardEase
           </Navbar.Brand>
           <Navbar.Toggle aria-controls='responsive-navbar-nav' />
           <Navbar.Collapse id='responsive-navbar-nav'>
-            <Nav className='me-auto'>
-              <Nav.Link
-                onClick={() => {
-                  nav('/billboard')
-                }}
-              >
-                Billboards
-              </Nav.Link>
-              <Nav.Link
-                onClick={() => {
-                  nav('/allusers')
-                }}
-              >
-                All User
-              </Nav.Link>
-            </Nav>
+            {+role === 1 ? (
+              <Nav className='me-auto'>
+                <Nav.Link
+                  onClick={() => {
+                    nav('/billboard')
+                  }}
+                >
+                  Billboards
+                </Nav.Link>
+                <Nav.Link
+                  onClick={() => {
+                    nav('/allusers')
+                  }}
+                >
+                  All User
+                </Nav.Link>
+              </Nav>
+            ) : +role === 2 ? (
+              <>
+                <Nav className='me-auto'>
+                  <Nav.Link
+                    onClick={() => {
+                      nav('/advertise')
+                    }}
+                  >
+                    My Order
+                  </Nav.Link>
+                  <Nav.Link
+                    onClick={() => {
+                      nav('/content')
+                    }}
+                  >
+                    My Content
+                  </Nav.Link>
+                  <Nav.Link
+                    onClick={() => {
+                      nav('/advertise')
+                    }}
+                  >
+                    Profile
+                  </Nav.Link>
+                </Nav>
+              </>
+            ) : (
+              <></>
+            )}
             <Nav>
               <Nav.Link
                 className='me-3'
                 onClick={e => {
                   Cookies.remove('Authorization')
-                  nav('/register')
+                  localStorage.removeItem('role')
+                  nav('/login')
                 }}
               >
                 Signout

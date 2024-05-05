@@ -8,6 +8,8 @@ import Home from './Component/Admin/Home'
 import Billboards from './Component/Admin/Billboard/Billboards'
 import Cookies from 'js-cookie'
 import AllUsers from './Component/Admin/AllUsers/AllUsers'
+import Advertise from './Component/Advertiser/Advertise'
+import Content from './Component/Advertiser/Content/Content'
 
 const App = () => {
   const [user, setUser] = useState(null)
@@ -44,6 +46,22 @@ const App = () => {
                 </ProtectedRoute>
               }
             />
+            <Route
+              path='/advertise'
+              element={
+                <ProtectedRoute roleRequired={2}>
+                  <Advertise />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path='/content'
+              element={
+                <ProtectedRoute roleRequired={2}>
+                  <Content />
+                </ProtectedRoute>
+              }
+            />
             <Route path='/register' element={<Register />} />
             <Route path='/login' element={<Register login={true} />} />
           </Routes>
@@ -60,6 +78,7 @@ const ProtectedRoute = ({ children, roleRequired }) => {
 
   React.useEffect(() => {
     if (!token || +storedRole !== roleRequired) {
+      console.log({ token, storedRole: +storedRole, roleRequired })
       navigate('/login')
     }
   }, [token, storedRole, roleRequired, navigate])

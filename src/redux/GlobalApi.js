@@ -99,6 +99,9 @@ export const GlobalApi = createApi({
       query: () => createRequest('/allusers'),
       providesTags: ['allusers']
     }),
+    getImage: builder.query({
+      query: ({ image }) => createRequest(`/media/getfile/${image}`)
+    }),
     banUser: builder.mutation({
       query: ({ id }) => createUpdateRequest(`/allusers/ban/${id}`),
       invalidatesTags: ['allusers']
@@ -106,6 +109,31 @@ export const GlobalApi = createApi({
     unbanUser: builder.mutation({
       query: ({ id }) => createUpdateRequest(`/allusers/unban/${id}`),
       invalidatesTags: ['allusers']
+    }),
+    myContent: builder.query({
+      query: () => createRequest(`/content/`),
+      providesTags: ['mycontent']
+    }),
+    addMyContent: builder.mutation({
+      query: ({ input }) => createPostRequest(`/content/`, input),
+      invalidatesTags: ['mycontent']
+    }),
+    UpdateMyContent: builder.mutation({
+      query: ({ id, input }) => createUpdateRequest(`/content/${id}`, input),
+      invalidatesTags: ['mycontent']
+    }),
+    DeleteMyContent: builder.mutation({
+      query: ({ id }) => createDeleteRequest(`/content/${id}`),
+      invalidatesTags: ['mycontent']
+    }),
+    addtoWishlist: builder.mutation({
+      query: ({ id, date }) =>
+        createPostRequest(`/wishlist/${id}?date=${date}`),
+      invalidatesTags: ['wishlist']
+    }),
+    wishlist: builder.query({
+      query: () => createRequest(`/wishlist/`),
+      providesTags: ['wishlist']
     })
     // Other endpoints using predefined request functions
   })
@@ -121,5 +149,12 @@ export const {
   useUpdateBillboardMutation,
   useGetAllUsersQuery,
   useBanUserMutation,
-  useUnbanUserMutation
+  useUnbanUserMutation,
+  useGetImageQuery,
+  useMyContentQuery,
+  useAddMyContentMutation,
+  useUpdateMyContentMutation,
+  useDeleteMyContentMutation,
+  useAddtoWishlistMutation,
+  useWishlistQuery
 } = GlobalApi

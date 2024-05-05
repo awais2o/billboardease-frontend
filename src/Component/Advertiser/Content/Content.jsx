@@ -1,19 +1,20 @@
 import React, { useEffect, useState } from 'react'
-import MyNav from '../MyNav'
+import MyNav from '../../Admin/MyNav'
 import {
-  useDeleteBillboardMutation,
-  useGetBillboardQuery,
-  useGetTagsQuery
+  useDeleteMyContentMutation,
+  useGetTagsQuery,
+  useMyContentQuery
 } from '../../../redux/GlobalApi'
 import { Button, Form, OverlayTrigger, Tooltip } from 'react-bootstrap'
-import AddBillboard from './AddBillboard'
 import Swal from 'sweetalert2'
-import ImagePopup from './ImagePopup'
+import AddContent from './AddContent'
+import { formatDate } from '../../../utils/DateFormat'
+import VideoPopup from './VideoPopup'
+// import ImagePopup from './ImagePopup'
 // import  from 'bootstrap-icons'
-const Billboards = () => {
-  const { data, isLoading, error, isError, refetch } = useGetBillboardQuery()
-  const { data: tags, isLoading: tagsIsLoading } = useGetTagsQuery()
-  const [deleteBillboard, deleteResults] = useDeleteBillboardMutation()
+const Content = () => {
+  const { data, isLoading, error, isError, refetch } = useMyContentQuery()
+  const [deleteMyContent, deleteResults] = useDeleteMyContentMutation()
 
   const [currentPage, setCurrentPage] = useState(1)
   const [itemsPerPage, setItemsPerPage] = useState(10)
@@ -25,19 +26,12 @@ const Billboards = () => {
   // Calculate the filtered and paginated items
   const indexOfLastItem = currentPage * itemsPerPage
   const indexOfFirstItem = indexOfLastItem - itemsPerPage
-  const filteredItems = data?.billboards?.filter(
-    item =>
-      item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      item.location_address.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredItems = data?.filter(
+    item => item?.title?.toLowerCase().includes(searchQuery.toLowerCase())
+    // ||
+    // item.location_address.toLowerCase().includes(searchQuery.toLowerCase())
   )
   const currentItems = filteredItems?.slice(indexOfFirstItem, indexOfLastItem)
-
-  useEffect(() => {
-    console.log({ data, tags })
-  }, [data, tags])
-  useEffect(() => {
-    console.log({ task, display })
-  }, [task, display])
 
   const handlePageChange = pageNumber => setCurrentPage(pageNumber)
   const handlePageSizeChange = event => {
@@ -58,7 +52,7 @@ const Billboards = () => {
     return (
       <nav>
         <ul className='pagination'>
-          {pageNumbers.map(number => (
+          {pageNumbers?.map(number => (
             <li key={number} className='page-item'>
               <a
                 href='#'
@@ -85,7 +79,7 @@ const Billboards = () => {
       confirmButtonText: 'Yes, delete it!'
     }).then(result => {
       if (result.isConfirmed) {
-        deleteBillboard({ id }) // Call deleteBillboard here
+        deleteMyContent({ id }) // Call deleteMyContent here
         Swal.fire({
           title: 'Deleted!',
           text: 'Your file has been deleted.',
@@ -123,10 +117,10 @@ const Billboards = () => {
             >
               <OverlayTrigger
                 placement='top'
-                overlay={<Tooltip id='tooltip'>Add Billboard</Tooltip>}
+                overlay={<Tooltip id='tooltip'>Add Content</Tooltip>}
               >
                 <Button className='send-invoice-btn btn btn-primary'>
-                  Add Billboard
+                  Add Content
                 </Button>
               </OverlayTrigger>
             </div>
@@ -162,37 +156,21 @@ const Billboards = () => {
             <table className='table mt-4'>
               <thead>
                 <tr>
-                  <th>#</th>
+                  <th>Content ID</th>
                   <th>Title</th>
-                  <th>Quantity (Units)</th>
-
-                  <th>Location Address</th>
-                  {/* <th>Dimension X</th>
-                  <th>Dimension Y</th> */}
-                  <th>Base Price (PKR)</th>
-                  <th>Tag</th>
+                  <th>Created At</th>
                   <th>Actions</th>
                 </tr>
               </thead>
               {!isLoading && data && (
                 <tbody>
-                  {currentItems.map(item => {
-                    const tag = tags?.tags?.find(
-                      tag => tag.tag_id === item.tag_id
-                    )
-                    const tagName = tag ? tag.tag_name : 'N/A'
+                  {currentItems?.map(item => {
                     return (
-                      <tr key={item.billboard_id}>
-                        <td>{item.billboard_id}</td>
-                        <td>{item.title}</td>
-                        <td>{item.quantity}</td>
+                      <tr key={item?.content_id}>
+                        <td>{item?.content_id}</td>
+                        <td>{item?.title}</td>
 
-                        <td>{item.location_address}</td>
-                        {/* <td>{item.dimension_x}</td>
-                        <td>{item.dimension_y}</td> */}
-                        <td>{item.baseprice}</td>
-
-                        <td>{tagName}</td>
+                        <td>{formatDate(item?.created_at)}</td>
                         <td>
                           <div style={{ display: 'flex', gap: '10px' }}>
                             <div
@@ -215,7 +193,7 @@ const Billboards = () => {
                             </div>
                             <div
                               onClick={() => {
-                                handleDelete(item.billboard_id)
+                                handleDelete(item.content_id)
                               }}
                             >
                               <img src='/images/trash3.svg' alt='Pen' />
@@ -228,7 +206,7 @@ const Billboards = () => {
                 </tbody>
               )}
             </table>
-            {data?.billboards && (
+            {data && (
               <>
                 <div className='m-3'>
                   {' '}
@@ -246,22 +224,29 @@ const Billboards = () => {
       </section>
       {task === 'add' && display ? (
         <>
-          <AddBillboard setDisplay={setDisplay} display={display} tags={tags} />
+          <AddContent
+            display={display}
+            setDisplay={setDisplay}
+            data={operate}
+          ></AddContent>
         </>
       ) : task === 'update' && display ? (
-        <AddBillboard
-          setDisplay={setDisplay}
-          display={display}
-          tags={tags}
-          update={true}
-          data={operate}
-        />
+        <>
+          <AddContent
+            display={display}
+            setDisplay={setDisplay}
+            data={operate}
+            update
+          ></AddContent>
+        </>
       ) : task === 'view' && display ? (
-        <ImagePopup
-          setDisplay={setDisplay}
-          display={display}
-          image={operate?.image}
-        />
+        <>
+          <VideoPopup
+            setDisplay={setDisplay}
+            display={display}
+            image={operate?.filepath}
+          ></VideoPopup>
+        </>
       ) : (
         <></>
       )}
@@ -269,4 +254,4 @@ const Billboards = () => {
   )
 }
 
-export default Billboards
+export default Content

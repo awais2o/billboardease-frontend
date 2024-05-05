@@ -60,8 +60,11 @@ function Register ({ login }) {
       const decoded = jwtDecode(loginResults?.data?.token)
       Cookies.set('user_id', decoded.user_id)
       localStorage.setItem('role', loginResults?.data?.role)
+      console.log(typeof loginResults?.data?.role)
+      loginResults?.data?.role === 1
+        ? navigate('/admin')
+        : navigate('/advertise')
 
-      navigate('/admin')
       toast.success('Register  Successfully', {
         style: {
           borderRadius: '10px',
@@ -88,8 +91,11 @@ function Register ({ login }) {
   }, [results])
 
   return (
-    <MDBContainer fluid style={{ minHeight: '100vh' }}>
-      <MDBCard className='text-black m-5' style={{ borderRadius: '25px' }}>
+    <MDBContainer fluid style={{ minHeight: '90vh' }}>
+      <MDBCard
+        className='text-black m-5 mb-0'
+        style={{ borderRadius: '25px', minHeight: '90vh' }}
+      >
         <MDBCardBody>
           <MDBRow>
             <MDBCol

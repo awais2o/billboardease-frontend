@@ -7,8 +7,14 @@ import {
   useUpdateBillboardMutation
 } from '../../../redux/GlobalApi'
 import toast, { LoaderIcon } from 'react-hot-toast'
+import Cookies from 'js-cookie'
+
+import axios from 'axios'
+const baseUrl = process.env.REACT_APP_API_URL
 
 const AddBillboard = ({ display, setDisplay, tags, data, update }) => {
+  const authtoken = Cookies.get('Authorization')
+
   console.log({ data })
   const [formData, setFormData] = useState({})
   useEffect(() => {
@@ -16,6 +22,9 @@ const AddBillboard = ({ display, setDisplay, tags, data, update }) => {
       setFormData(data)
     }
   }, [data])
+  useEffect(() => {
+    console.log({ formData })
+  }, [formData])
   useEffect(() => {
     console.log(formData)
   }, [formData])
@@ -64,6 +73,43 @@ const AddBillboard = ({ display, setDisplay, tags, data, update }) => {
     value: tag?.tag_id,
     label: tag?.tag_name
   }))
+  const [selectedFile, setSelectedFile] = useState(null)
+
+  // Function to handle file change
+  const handleFileChange = async event => {
+    const file = event.target.files[0] // Get the selected file
+
+    // Create formData object to send file data
+    const formData = new FormData()
+    formData.append('media', file)
+
+    try {
+      // Make API call to upload the file
+      const response = await axios.post(
+        `${baseUrl}/media/uploadfile`,
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            Authorization: authtoken
+          }
+        }
+      )
+
+      console.log('File uploaded successfully:', response.data)
+      setFormData(formdata => {
+        return {
+          ...formdata,
+          image: response?.data?.name
+        }
+      })
+      // Do something with the response if needed
+    } catch (error) {
+      console.error('Error uploading file:', error)
+      // Handle error
+    }
+  }
+
   return (
     <>
       <Modal
@@ -86,7 +132,7 @@ const AddBillboard = ({ display, setDisplay, tags, data, update }) => {
             <Row>
               <Col>
                 <Form onSubmit={handleSubmit}>
-                  <Form.Group as={Col} controlId='title'>
+                  <Form.Group as={Col} className='mb-3' controlId='title'>
                     <Form.Label>Title</Form.Label>
                     <Col sm='10'>
                       <Form.Control
@@ -102,7 +148,36 @@ const AddBillboard = ({ display, setDisplay, tags, data, update }) => {
                       </Form.Control.Feedback>
                     </Col>
                   </Form.Group>
-
+                  <Form.Group as={Col} className='mb-3' controlId='baseprice'>
+                    <Form.Label>Base Price</Form.Label>
+                    <Col sm='10'>
+                      <Form.Control
+                        required
+                        type='number'
+                        name='baseprice'
+                        value={formData.baseprice}
+                        onChange={handleChange}
+                      />
+                      <Form.Control.Feedback type='invalid'>
+                        Please enter a title starting with text.
+                      </Form.Control.Feedback>
+                    </Col>
+                  </Form.Group>
+                  <Form.Group as={Col} className='mb-3' controlId='quanity'>
+                    <Form.Label>Quantity (Series)</Form.Label>
+                    <Col sm='10'>
+                      <Form.Control
+                        required
+                        type='number'
+                        name='quantity'
+                        value={formData.quantity}
+                        onChange={handleChange}
+                      />
+                      <Form.Control.Feedback type='invalid'>
+                        Please enter a title starting with text.
+                      </Form.Control.Feedback>
+                    </Col>
+                  </Form.Group>
                   <Form.Group
                     as={Col}
                     className='mb-3'
@@ -207,6 +282,14 @@ const AddBillboard = ({ display, setDisplay, tags, data, update }) => {
                         isSearchable
                       />
                     </Col>
+                  </Form.Group>
+                  <Form.Group controlId='formFile' className='mb-3'>
+                    <Form.Label>Select File</Form.Label>
+                    <Form.Control
+                      type='file'
+                      accept='image/*'
+                      onChange={handleFileChange}
+                    />
                   </Form.Group>
                   {!update ? (
                     <Button disabled={results.isLoading} type='submit'>
