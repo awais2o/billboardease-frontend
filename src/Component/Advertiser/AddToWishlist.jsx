@@ -1,34 +1,47 @@
 import React, { useState } from 'react'
-import { Button, Form, Modal } from 'react-bootstrap'
+import { Button, Form, Modal, Alert } from 'react-bootstrap'
 import {
   useAddtoWishlistMutation,
   useWishlistQuery
 } from '../../redux/GlobalApi'
 
 const AddToWishlist = ({ data, display, setDisplay }) => {
-  const [wish, wished] = useAddtoWishlistMutation()
-  const hi = useWishlistQuery()
-  const [date, setDate] = useState('') // State to hold the date value
+  const [wish, { isLoading }] = useAddtoWishlistMutation()
+  const [date, setDate] = useState('')
+  const [error, setError] = useState('')
 
   const handleSubmit = e => {
     e.preventDefault()
-    // Ensure you are calling the `wish` function correctly with the date from state
-    if (data?.billboard_id && date) {
+    const minutes = new Date(date).getMinutes()
+    if ((minutes === 0 || minutes === 30) && data?.billboard_id) {
       wish({ id: data.billboard_id, date: date })
+      setError('')
+      setDisplay(false)
     } else {
-      console.error('Missing billboard ID or date')
+      setError('Please ensure the time is on the hour or half past the hour.')
     }
-    setDisplay(false)
   }
 
   const handleDateChange = e => {
-    setDate(e.target.value) // Update the date state on change
+    const value = e.target.value
+    const minutes = new Date(value).getMinutes()
+    console.log({ minutes })
+    if (minutes === 0 || minutes === 30) {
+      setDate(value)
+      setError('')
+    } else {
+      setError(
+        'Please select a time that is either on the hour or half past the hour.'
+      )
+    }
   }
-  const today = new Date()
-  // Add 3 days to today's date
-  const threeDaysLater = new Date(today.setDate(today.getDate() + 3))
-  // Format the date as yyyy-mm-dd
-  const minDate = threeDaysLater.toISOString().split('T')[0]
+
+  const calculateMinDate = () => {
+    const today = new Date()
+    today.setDate(today.getDate() + 3)
+    return today.toISOString().split('T')[0]
+  }
+
   return (
     <Modal
       show={display}
@@ -45,15 +58,20 @@ const AddToWishlist = ({ data, display, setDisplay }) => {
           <Form.Group controlId='wishdate'>
             <Form.Label>Date</Form.Label>
             <Form.Control
-              type='date'
+              type='datetime-local'
+              step='1800'
               value={date}
               onChange={handleDateChange}
-              min={minDate} // Ensures date is at least three days in the future
+              min={calculateMinDate()} // Ensures date is at least three days in the future
             />
           </Form.Group>
-          <Button className='mt-3' type='submit'>
-            Add to Your Wishlist
-          </Button>
+          {error ? (
+            <Alert variant='danger'>{error}</Alert>
+          ) : (
+            <Button className='mt-3' type='submit' disabled={isLoading}>
+              Add to Your Wishlist
+            </Button>
+          )}
         </Form>
       </Modal.Body>
     </Modal>

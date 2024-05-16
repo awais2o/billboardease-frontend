@@ -8,6 +8,7 @@ import {
 import { Button, Form, OverlayTrigger, Tooltip } from 'react-bootstrap'
 import Swal from 'sweetalert2'
 import AddToWishlist from './AddToWishlist'
+import { BidPage } from './BidPage'
 
 const Advertise = () => {
   const { data, isLoading, error, isError, refetch } = useGetBillboardQuery()
@@ -53,7 +54,10 @@ const Advertise = () => {
     for (let i = 1; i <= Math.ceil(totalItems / itemsPerPage); i++) {
       pageNumbers.push(i)
     }
-
+    // console.log({task,})
+    useEffect(() => {
+      console.log({ task, display })
+    }, [task, display])
     return (
       <nav>
         <ul className='pagination'>
@@ -173,6 +177,16 @@ const Advertise = () => {
                         >
                           Add to Wishlist
                         </button>
+                        <button
+                          className='btn btn-secondary ms-2'
+                          onClick={() => {
+                            setDisplay(true)
+                            setTask('bid')
+                            setOperate(item)
+                          }}
+                        >
+                          Make Bid
+                        </button>
                       </div>
                     </div>
                   </div>
@@ -197,6 +211,14 @@ const Advertise = () => {
             display={display}
             setDisplay={setDisplay}
             data={operate}
+          />
+        </>
+      ) : display && task === 'bid' ? (
+        <>
+          <BidPage
+            display={display}
+            setDisplay={setDisplay}
+            billboard={operate}
           />
         </>
       ) : (
