@@ -14,3 +14,14 @@
 .hover-shadow:hover {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
+
+.bg-label-danger {
+    background-color: #fce5e6 !important;
+    color: #ea5455 !important;
+}
+
+.bg-label-info {
+    background-color: #d9f8fc !important;
+    ;
+    color: #00cfe8 !important;
+}

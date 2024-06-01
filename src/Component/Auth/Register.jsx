@@ -59,13 +59,14 @@ function Register ({ login }) {
       Cookies.set('Authorization', loginResults?.data?.token)
       const decoded = jwtDecode(loginResults?.data?.token)
       Cookies.set('user_id', decoded.user_id)
+      setUser( decoded.user_id)
       localStorage.setItem('role', loginResults?.data?.role)
       console.log(typeof loginResults?.data?.role)
       loginResults?.data?.role === 1
         ? navigate('/admin')
         : navigate('/advertise')
 
-      toast.success('Register  Successfully', {
+      toast.success('Login  Successfully', {
         style: {
           borderRadius: '10px',
           background: '#333',
@@ -79,6 +80,12 @@ function Register ({ login }) {
       setInput()
       navigate('/login')
     }
+    if (loginResults.isError) {
+      alert(loginResults.error.error)
+    }
+    if (results.isError) {
+      alert(loginResults.error.error)
+    }
     //  else {
     //   toast.success('Register  Fail', {
     //     style: {
@@ -88,7 +95,7 @@ function Register ({ login }) {
     //     }
     //   })
     // }
-  }, [results])
+  }, [results, loginResults])
 
   return (
     <MDBContainer fluid style={{ minHeight: '90vh' }}>

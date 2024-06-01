@@ -10,6 +10,9 @@ import Cookies from 'js-cookie'
 import AllUsers from './Component/Admin/AllUsers/AllUsers'
 import Advertise from './Component/Advertiser/Advertise'
 import Content from './Component/Advertiser/Content/Content'
+import ProceedingPage from './Component/Advertiser/Proceeding/ProceedingPage'
+import ApproveContent from './Component/Admin/ApproveContent'
+import PaymentPage from './Component/Advertiser/PaymentPage'
 
 const App = () => {
   const [user, setUser] = useState(null)
@@ -39,6 +42,14 @@ const App = () => {
               }
             />
             <Route
+              path='/approve-content'
+              element={
+                <ProtectedRoute roleRequired={1}>
+                  <ApproveContent />
+                </ProtectedRoute>
+              }
+            />
+            <Route
               path='/allusers'
               element={
                 <ProtectedRoute roleRequired={1}>
@@ -54,6 +65,23 @@ const App = () => {
                 </ProtectedRoute>
               }
             />
+            <Route
+              path='/proceed'
+              element={
+                <ProtectedRoute roleRequired={2}>
+                  <ProceedingPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path='/payment'
+              element={
+                <ProtectedRoute roleRequired={2}>
+                  <PaymentPage />
+                </ProtectedRoute>
+              }
+            />
+
             <Route
               path='/content'
               element={

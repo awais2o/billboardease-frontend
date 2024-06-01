@@ -71,8 +71,13 @@ export const GlobalApi = createApi({
       query: ({ input }) => createPostRequest('/auth/register/', input)
       // You may include additional mutations or queries here using your predefined functions
     }),
+    mywinning: builder.query({
+      query: () => createRequest(`/proceed/mywinnings`),
+      providesTags: ['winnings']
+    }),
     login: builder.mutation({
-      query: ({ input }) => createPostRequest('/auth/login/', input)
+      query: ({ input }) => createPostRequest('/auth/login/', input),
+      invalidatesTags: ['winninga']
       // You may include additional mutations or queries here using your predefined functions
     }),
     getBillboard: builder.query({
@@ -134,13 +139,35 @@ export const GlobalApi = createApi({
     wishlist: builder.query({
       query: () => createRequest(`/wishlist/`),
       providesTags: ['wishlist']
+    }),
+    attachContent: builder.mutation({
+      query: data => createPostRequest(`/proceed/attach-content`, data),
+      invalidatesTags: ['winnings']
+    }),
+    upcomingAllOrders: builder.query({
+      query: data => createRequest(`/proceed/allcontent`),
+      providesTags: ['allcontent']
+    }),
+    approveContent: builder.mutation({
+      query: data => createPostRequest(`/proceed/approve-content`, data),
+      invalidatesTags: ['allcontent']
+    }),
+    disapproveContent: builder.mutation({
+      query: data => createPostRequest(`/proceed/disapprove-content`, data),
+      invalidatesTags: ['allcontent']
+    }),
+    willToPay: builder.query({
+      query: data => createRequest(`/proceed/willtopay`),
+      providesTags: ['willtopay']
     })
+
     // Other endpoints using predefined request functions
   })
 })
 
 export const {
   useRegisterMutation,
+  useMywinningQuery,
   useLoginMutation,
   useGetBillboardQuery,
   useGetTagsQuery,
@@ -156,5 +183,10 @@ export const {
   useUpdateMyContentMutation,
   useDeleteMyContentMutation,
   useAddtoWishlistMutation,
-  useWishlistQuery
+  useWishlistQuery,
+  useAttachContentMutation,
+  useUpcomingAllOrdersQuery,
+  useApproveContentMutation,
+  useDisapproveContentMutation,
+  useWillToPayQuery
 } = GlobalApi

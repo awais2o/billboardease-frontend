@@ -3,6 +3,7 @@ import { Modal } from 'react-bootstrap'
 import { useGetImageQuery } from '../../../redux/GlobalApi'
 
 const VideoPopup = ({ display, setDisplay, image }) => {
+  console.log(image)
   const { data, isError, status } = useGetImageQuery({ image })
   return (
     <>

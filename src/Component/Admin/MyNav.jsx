@@ -36,23 +36,38 @@ const MyNav = () => {
                 >
                   All User
                 </Nav.Link>
+
+                <Nav.Link
+                  onClick={() => {
+                    nav('/approve-content')
+                  }}
+                >
+                  Approve
+                </Nav.Link>
               </Nav>
             ) : +role === 2 ? (
               <>
                 <Nav className='me-auto'>
                   <Nav.Link
                     onClick={() => {
-                      nav('/advertise')
-                    }}
-                  >
-                    My Order
-                  </Nav.Link>
-                  <Nav.Link
-                    onClick={() => {
                       nav('/content')
                     }}
                   >
                     My Content
+                  </Nav.Link>
+                  <Nav.Link
+                    onClick={() => {
+                      nav('/proceed')
+                    }}
+                  >
+                    Proceeding
+                  </Nav.Link>
+                  <Nav.Link
+                    onClick={() => {
+                      nav('/payment')
+                    }}
+                  >
+                    Pending Payment
                   </Nav.Link>
                   <Nav.Link
                     onClick={() => {

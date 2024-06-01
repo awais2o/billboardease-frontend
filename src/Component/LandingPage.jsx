@@ -17,16 +17,17 @@ const LandingPage = () => {
             </Nav>
             <Nav>
               <Nav.Link
+                as={Button}
                 className='me-3'
                 onClick={() => {
-                  nav('/register')
+                  nav('/login')
                 }}
               >
-                Admin
-              </Nav.Link>
-              <Nav.Link href='#login' as={Button}>
                 Login/Signup
               </Nav.Link>
+              {/* <Nav.Link href='#login' as={Button}>
+                Login/Signup
+              </Nav.Link> */}
             </Nav>
           </Navbar.Collapse>
         </Container>
