@@ -5,7 +5,7 @@ import Cookies from 'js-cookie'
 import { formatDate } from '../../utils/DateFormat'
 import UserContext from '../../Context/UserContext'
 
-const socket = io('http://localhost:5001/') // Connect to the server without token
+const socket = io(process.env.REACT_APP_API_URL) // Connect to the server without token
 
 export const BidPage = ({ billboard, display, setDisplay }) => {
   const { user } = useContext(UserContext)

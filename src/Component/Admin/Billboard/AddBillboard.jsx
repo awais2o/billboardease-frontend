@@ -81,7 +81,7 @@ const AddBillboard = ({ display, setDisplay, tags, data, update }) => {
 
     // Create formData object to send file data
     const formData = new FormData()
-    formData.append('media', file)
+    formData.append('file', file)
 
     try {
       // Make API call to upload the file
@@ -100,7 +100,7 @@ const AddBillboard = ({ display, setDisplay, tags, data, update }) => {
       setFormData(formdata => {
         return {
           ...formdata,
-          image: response?.data?.name
+          image: response?.data?.url
         }
       })
       // Do something with the response if needed

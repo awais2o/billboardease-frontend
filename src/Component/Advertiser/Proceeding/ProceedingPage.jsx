@@ -71,29 +71,20 @@ const ProceedingPage = () => {
     <>
       <MyNav />
       <section className='container-fluid'>
-        <div className='col-12'>
-          <div className='row mt-4'>
-            <div className='col-12 col-md-6'>
-              <Form.Control
-                type='text'
-                placeholder='Search by bid amount...'
-                className='form-control'
-                value={searchQuery}
-                onChange={handleSearchInputChange}
-              />
-            </div>
+        <div className='row mt-4 align-items-center'>
+          <div className='col-12 col-md-6'>
+            <Form.Control
+              type='text'
+              placeholder='Search by bid amount...'
+              className='form-control'
+              value={searchQuery}
+              onChange={handleSearchInputChange}
+            />
           </div>
-        </div>
-        <div className='col-12 mt-3'>
-          <div className='col-12 d-flex justify-content-end'>
-            <label
-              style={{
-                display: 'flex',
-                whiteSpace: 'nowrap',
-                fontWeight: 'normal'
-              }}
-            >
-              <small className='mt-2 title'> Show</small>
+
+          <div className='col-12 col-md-6 d-flex justify-content-end mt-2 mt-md-0'>
+            <div className='d-flex align-items-center'>
+              <small className='mt-2 title'>Show</small>
               <Form.Select
                 aria-label='Change Page size'
                 onChange={handlePageSizeChange}
@@ -106,7 +97,7 @@ const ProceedingPage = () => {
                 <option value='50'>50</option>
               </Form.Select>
               <small className='mt-2'> entries</small>
-            </label>
+            </div>
           </div>
         </div>
         <div className='container-fluid card m-0 mt-3 p-0 w-100 col-12'>

@@ -3,7 +3,7 @@ import { Modal } from 'react-bootstrap'
 import { useGetImageQuery } from '../../../redux/GlobalApi'
 
 const ImagePopup = ({ display, setDisplay, image }) => {
-  const { data, isError, status } = useGetImageQuery({ image })
+  // const { data, isError, status } = useGetImageQuery({ image })
   return (
     <>
       <Modal
@@ -19,7 +19,7 @@ const ImagePopup = ({ display, setDisplay, image }) => {
         <Modal.Body>
           <img
             placeholder='No Image'
-            src={!isError ? data?.imageURL : 'https://placehold.co/600x400'}
+            src={image || 'https://placehold.co/600x400'}
             style={{
               maxWidth: '100%',
               maxHeight: '100%',

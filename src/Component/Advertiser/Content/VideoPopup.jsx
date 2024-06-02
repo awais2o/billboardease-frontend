@@ -4,7 +4,7 @@ import { useGetImageQuery } from '../../../redux/GlobalApi'
 
 const VideoPopup = ({ display, setDisplay, image }) => {
   console.log(image)
-  const { data, isError, status } = useGetImageQuery({ image })
+  // const { data, isError, status } = useGetImageQuery({ image })
   return (
     <>
       <Modal
@@ -27,7 +27,7 @@ const VideoPopup = ({ display, setDisplay, image }) => {
             controls // Allows the user to control video playback, including volume, seeking, and pause/play.
           >
             <source
-              src={!isError ? data?.imageURL : 'https://placehold.co/600x400'}
+              src={image || 'https://placehold.co/600x400'}
               type='video/mp4'
             />
             Your browser does not support the video tag.

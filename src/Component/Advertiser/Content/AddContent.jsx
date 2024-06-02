@@ -78,7 +78,7 @@ const AddContent = ({ display, setDisplay, data, update }) => {
     console.log(file)
     // Create formData object to send file data
     const formData = new FormData()
-    formData.append('media', file)
+    formData.append('file', file)
 
     try {
       // Make API call to upload the file
@@ -97,7 +97,7 @@ const AddContent = ({ display, setDisplay, data, update }) => {
       setFormData(formdata => {
         return {
           ...formdata,
-          filepath: response?.data?.name
+          filepath: response?.data?.url
         }
       })
       // Do something with the response if needed

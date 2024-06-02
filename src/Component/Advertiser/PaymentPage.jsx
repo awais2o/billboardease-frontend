@@ -76,33 +76,31 @@ const PaymentPage = () => {
     <>
       <MyNav />
       <section className='container-fluid'>
-        <div className='col-12'>
-          <div className='row mt-4'>
-            <div className='col-12 col-md-6'>
-              <Form.Control
-                type='text'
-                placeholder='Search by bid amount...'
-                className='form-control'
-                value={searchQuery}
-                onChange={handleSearchInputChange}
-              />
-            </div>
+        <div className='row mt-4'>
+          <div className='col-12 col-md-6 mb-3 mb-md-0'>
+            <Form.Control
+              type='text'
+              placeholder='Search by bid amount...'
+              className='form-control'
+              value={searchQuery}
+              onChange={handleSearchInputChange}
+            />
           </div>
-        </div>
-        <div className='col-12 mt-3'>
-          <div className='col-12 d-flex justify-content-end'>
+
+          <div className='col-12 col-md-6 d-flex justify-content-end mt-2 mt-md-0'>
             <label
               style={{
                 display: 'flex',
                 whiteSpace: 'nowrap',
+                alignItems: 'center',
                 fontWeight: 'normal'
               }}
             >
-              <small className='mt-2 title'> Show</small>
+              <small className='title'>Show</small>
               <Form.Select
                 aria-label='Change Page size'
                 onChange={handlePageSizeChange}
-                defaultValue={10}
+                defaultValue='10'
                 className='ms-2 me-3'
               >
                 <option value='10'>10</option>
@@ -110,7 +108,7 @@ const PaymentPage = () => {
                 <option value='30'>30</option>
                 <option value='50'>50</option>
               </Form.Select>
-              <small className='mt-2'> entries</small>
+              <small>entries</small>
             </label>
           </div>
         </div>
