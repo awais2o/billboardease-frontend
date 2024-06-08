@@ -1,15 +1,17 @@
+110500
+11200
+25200
+
+
+
 import React, { useState, useEffect, useContext } from 'react'
 import { Form, Modal, Button } from 'react-bootstrap'
-import axios from 'axios'
 import io from 'socket.io-client'
 import Cookies from 'js-cookie'
 import { formatDate } from '../../utils/DateFormat'
 import UserContext from '../../Context/UserContext'
 
-const socket = io(process.env.REACT_APP_API_URL, {
-  reconnectionAttempts: 5, // Retry 5 times
-  timeout: 5000 // Wait 5 seconds before timing out
-})
+const socket = io(process.env.REACT_APP_API_URL) // Connect to the server without token
 
 export const BidPage = ({ billboard, display, setDisplay }) => {
   const { user } = useContext(UserContext)
@@ -43,7 +45,6 @@ export const BidPage = ({ billboard, display, setDisplay }) => {
   const [lastBidTime, setLastBidTime] = useState(null) // Initialize as null
   const [canBid, setCanBid] = useState(true) // Initialize as true
   const [countdown, setCountdown] = useState(60) // 60 seconds countdown
-  const [isSocketConnected, setIsSocketConnected] = useState(false) // Track socket connection status
 
   useEffect(() => {
     const roomName = `${billboard.billboard_id}_${forDateTime}`
@@ -64,23 +65,9 @@ export const BidPage = ({ billboard, display, setDisplay }) => {
       }
     }
 
-    const handleSocketConnect = () => {
-      console.log('Socket connected')
-      setIsSocketConnected(true)
-    }
-
-    const handleSocketDisconnect = () => {
-      console.log('Socket disconnected')
-      setIsSocketConnected(false)
-    }
-
-    socket.on('connect', handleSocketConnect)
-    socket.on('disconnect', handleSocketDisconnect)
     socket.on('bid', handleNewBid)
 
     return () => {
-      socket.off('connect', handleSocketConnect)
-      socket.off('disconnect', handleSocketDisconnect)
       socket.off('bid', handleNewBid)
       console.log(`Leaving room: ${roomName}`)
       socket.emit('leaveRoom', {
@@ -110,70 +97,22 @@ export const BidPage = ({ billboard, display, setDisplay }) => {
     }
   }, [lastBidTime])
 
-  useEffect(() => {
-    const fetchBidData = async () => {
-      try {
-        const response = await axios.get(
-          `${process.env.REACT_APP_API_URL}/bid?billboard_id=${billboard.billboard_id}&dateTime=${forDateTime}`,
-          {
-            headers: {
-              Authorization: `${Cookies.get('Authorization')}`
-            }
-          }
-        )
-        const latestBid = response.data
-        setBid(latestBid.bid || billboard.baseprice)
-        setValue(latestBid.bid + 500 || billboard.baseprice)
-      } catch (error) {
-        console.error('Failed to fetch bid data:', error)
-        alert('Failed to fetch bid data')
-      }
-    }
-
-    let fetchInterval = null
-
-    if (!isSocketConnected) {
-      fetchBidData() // Fetch immediately when socket disconnects
-      fetchInterval = setInterval(fetchBidData, 5000) // Fetch every 5 seconds
-    }
-
-    return () => {
-      if (fetchInterval) {
-        clearInterval(fetchInterval)
-      }
-    }
-  }, [isSocketConnected, forDateTime])
-
-  const handleBidSubmit = async () => {
+  const handleBidSubmit = () => {
     setLastBidTime(Date.now())
     setCanBid(false)
     setCountdown(60) // Reset countdown
 
-    const bidData = {
+    socket.emit('bid', {
       bid: value,
       dateTime: forDateTime,
       billboard_id: billboard?.billboard_id,
       user_id: user_id // Use the user_id from the cookie
-    }
+    })
 
-    try {
-      if (isSocketConnected) {
-        socket.emit('bid', bidData)
-      } else {
-        await axios.post(`${process.env.REACT_APP_API_URL}/bid`, bidData, {
-          headers: {
-            Authorization: `${Cookies.get('Authorization')}`
-          }
-        })
-      }
-      console.log(
-        `Bid submitted for: ${forDateTime} on billboard ID: ${billboard?.billboard_id}`
-      )
-    } catch (error) {
-      console.error('Failed to submit bid:', error)
-    }
+    console.log(
+      `Bid submitted for: ${forDateTime} on billboard ID: ${billboard?.billboard_id}`
+    )
   }
-
   console.log({ forDateTime })
   return (
     <Modal show={display} onHide={() => setDisplay(false)}>
