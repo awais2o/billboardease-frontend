@@ -13,7 +13,9 @@ import Content from './Component/Advertiser/Content/Content'
 import ProceedingPage from './Component/Advertiser/Proceeding/ProceedingPage'
 import ApproveContent from './Component/Admin/ApproveContent'
 import PaymentPage from './Component/Advertiser/PaymentPage'
-
+import 'slick-carousel/slick/slick.css'
+import 'slick-carousel/slick/slick-theme.css'
+import Profile from './Component/Advertiser/Profile'
 const App = () => {
   const [user, setUser] = useState(null)
   const [role, setRole] = useState(null)
@@ -78,6 +80,14 @@ const App = () => {
               element={
                 <ProtectedRoute roleRequired={2}>
                   <PaymentPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path='/profile'
+              element={
+                <ProtectedRoute roleRequired={2}>
+                  <Profile />
                 </ProtectedRoute>
               }
             />

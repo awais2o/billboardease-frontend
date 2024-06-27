@@ -9,6 +9,7 @@ import { Button, Form, OverlayTrigger, Tooltip } from 'react-bootstrap'
 import Swal from 'sweetalert2'
 import AddToWishlist from './AddToWishlist'
 import { BidPage } from './BidPage'
+import Footer from '../Footer'
 
 const Advertise = () => {
   const { data, isLoading, error, isError, refetch } = useGetBillboardQuery()
@@ -137,8 +138,7 @@ const Advertise = () => {
 
         <div className='container-fluid mt-3 p-0 w-100 col-12'>
           <div className='row'>
-            {!isLoading &&
-              data &&
+            {!isLoading && data ? (
               currentItems.map(item => {
                 const tag = tags?.tags?.find(tag => tag.tag_id === item.tag_id)
                 const tagName = tag ? tag.tag_name : 'N/A'
@@ -184,7 +184,12 @@ const Advertise = () => {
                     </div>
                   </div>
                 )
-              })}
+              })
+            ) : isLoading ? (
+              <h3>Data is Loading</h3>
+            ) : (
+              <h3>No Data</h3>
+            )}
           </div>
         </div>
         {data?.billboards && (
@@ -198,6 +203,7 @@ const Advertise = () => {
           </div>
         )}
       </section>
+      <Footer />
       {display && task === 'wishlist' ? (
         <>
           <AddToWishlist

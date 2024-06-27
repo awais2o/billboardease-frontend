@@ -7,6 +7,7 @@ import MyNav from '../../Admin/MyNav'
 import { formatDate } from '../../../utils/DateFormat'
 import SelectContent from './SelectContent'
 import PaymentButton from './PaymentButton'
+import Footer from '../../Footer'
 
 // import { formatDate } from '../../../utils/DateFormat'
 
@@ -112,7 +113,7 @@ const ProceedingPage = () => {
                   <th>Actions</th>
                 </tr>
               </thead>
-              {!isLoading && data?.winnings && (
+              {!isLoading && data?.winnings.length > 0 ? (
                 <tbody>
                   {currentItems?.map(item => {
                     return (
@@ -122,29 +123,31 @@ const ProceedingPage = () => {
                         <td>{item?.billboard_title}</td>
                         <td>{formatDate(item?.forDateTime)}</td>
                         <td>
-                          <div style={{ display: 'flex', gap: '10px' }}>
-                            <div
-                              onClick={() => {
-                                setDisplay(true)
-                                setTask('addContent')
-                                setOperate(item)
-                              }}
-                            >
-                              <img src='/images/folder-plus.svg' alt='Eye' />
-                            </div>
-
-                            <div
-                              onClick={() => {
-                                setShowModal(true)
-                              }}
-                            >
-                              <img src='/images/credit-card.svg' alt='Eye' />
-                            </div>
+                          <div
+                            onClick={() => {
+                              setDisplay(true)
+                              setTask('addContent')
+                              setOperate(item)
+                            }}
+                          >
+                            <img src='/images/folder-plus.svg' alt='Eye' />
                           </div>
                         </td>
                       </tr>
                     )
                   })}
+                </tbody>
+              ) : isLoading ? (
+                <tbody>
+                  <tr>
+                    <td>Data is Loading</td>
+                  </tr>
+                </tbody>
+              ) : (
+                <tbody>
+                  <tr>
+                    <td>No Data</td>
+                  </tr>
                 </tbody>
               )}
             </table>
@@ -161,12 +164,7 @@ const ProceedingPage = () => {
           </div>
         </div>
       </section>
-      <PaymentButton
-        amount={100000}
-        currency='pkr'
-        showModal={showModal}
-        setShowModal={setShowModal}
-      />
+      <Footer />
 
       {display && task === 'addContent' && operate ? (
         <>

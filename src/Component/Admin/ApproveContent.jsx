@@ -11,6 +11,7 @@ import {
 import MyNav from './MyNav'
 import { renderTooltip } from '../../utils/Tooltip'
 import VideoPopup from '../Advertiser/Content/VideoPopup'
+import Footer from '../Footer'
 
 const ApproveContentPage = () => {
   const { data, isLoading, error, isError } = useUpcomingAllOrdersQuery()
@@ -83,33 +84,32 @@ const ApproveContentPage = () => {
                 onChange={handleSearchInputChange}
               />
             </div>
-          </div>
-        </div>
-        <div className='col-12 mt-3'>
-          <div className='col-12 d-flex justify-content-end'>
-            <label
-              style={{
-                display: 'flex',
-                whiteSpace: 'nowrap',
-                fontWeight: 'normal'
-              }}
-            >
-              <small className='mt-2 title'> Show</small>
-              <Form.Select
-                aria-label='Change Page size'
-                onChange={handlePageSizeChange}
-                defaultValue={10}
-                className='ms-2 me-3'
+            <div className='col-12  col-md-6 mt-2 mt-md-0 d-flex justify-content-end'>
+              <label
+                style={{
+                  display: 'flex',
+                  whiteSpace: 'nowrap',
+                  fontWeight: 'normal'
+                }}
               >
-                <option value='10'>10</option>
-                <option value='20'>20</option>
-                <option value='30'>30</option>
-                <option value='50'>50</option>
-              </Form.Select>
-              <small className='mt-2'> entries</small>
-            </label>
+                <small className='mt-2 title'> Show</small>
+                <Form.Select
+                  aria-label='Change Page size'
+                  onChange={handlePageSizeChange}
+                  defaultValue={10}
+                  className='ms-2 me-3'
+                >
+                  <option value='10'>10</option>
+                  <option value='20'>20</option>
+                  <option value='30'>30</option>
+                  <option value='50'>50</option>
+                </Form.Select>
+                <small className='mt-2'> entries</small>
+              </label>
+            </div>
           </div>
         </div>
+        <div className='col-12 mt-3'></div>
         <div className='container-fluid card m-0 mt-3 p-0 w-100 col-12'>
           <div className='table-responsive'>
             <table className='table mt-4'>
@@ -208,6 +208,7 @@ const ApproveContentPage = () => {
           </div>
         </div>
       </section>
+      <Footer />
       {task === 'display' && display && (
         <VideoPopup
           display={display}

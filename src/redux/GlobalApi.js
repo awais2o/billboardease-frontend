@@ -68,7 +68,8 @@ export const GlobalApi = createApi({
   baseQuery: baseQueryWithHeaders,
   endpoints: builder => ({
     register: builder.mutation({
-      query: ({ input }) => createPostRequest('/auth/register/', input)
+      query: ({ input }) => createPostRequest('/auth/register/', input),
+      invalidatesTags: ['totaladvertisers']
       // You may include additional mutations or queries here using your predefined functions
     }),
     mywinning: builder.query({
@@ -86,7 +87,7 @@ export const GlobalApi = createApi({
     }),
     postBillboard: builder.mutation({
       query: ({ input }) => createPostRequest('/billboard', input),
-      invalidatesTags: ['billboard']
+      invalidatesTags: ['billboard', 'recentBillboard', 'totalBillboard']
     }),
     updateBillboard: builder.mutation({
       query: ({ input, id }) => createUpdateRequest(`/billboard/${id}`, input),
@@ -159,8 +160,55 @@ export const GlobalApi = createApi({
     willToPay: builder.query({
       query: data => createRequest(`/proceed/willtopay`),
       providesTags: ['willtopay']
-    })
+    }),
+    totalBillboard: builder.query({
+      query: data => createRequest(`/dashboard/totalbillboard`),
+      providesTags: ['totalbillboard']
+    }),
+    recentBillboard: builder.query({
+      query: data => createRequest(`/dashboard/recentbillboards`),
+      providesTags: ['recentbillboard']
+    }),
 
+    totaladvertisers: builder.query({
+      query: data => createRequest(`/dashboard/totaladvertisers`),
+      providesTags: ['totaladvertisers']
+    }),
+    recentadvertisers: builder.query({
+      query: data => createRequest(`/dashboard/recentadvertisers`),
+      providesTags: [' recentadvertisers']
+    }),
+    totaladmins: builder.query({
+      query: data => createRequest(`/dashboard/totaladmins`),
+      providesTags: ['totaladmins']
+    }),
+    totalrevenue: builder.query({
+      query: data => createRequest(`/dashboard/totalrevenue`),
+      providesTags: ['totalrevenue']
+    }),
+    averagebid: builder.query({
+      query: data => createRequest(`/dashboard/averagebid`),
+      providesTags: ['averagebid']
+    }),
+    monthlygrowth: builder.query({
+      query: data => createRequest(`/dashboard/monthlygrowth`),
+      providesTags: ['monthlygrowth']
+    }),
+    userprofile: builder.query({
+      query: data => createRequest(`/auth/user/${data}`),
+      providesTags: ['userprofile']
+    }),
+    updateuserprofile: builder.mutation({
+      query: data => createUpdateRequest(`/auth/user/${data.user_id}`, data),
+      invalidatesTags: ['userprofile']
+    })
+    // monthlygrowth
+    // averagebid
+    // totalrevenue
+    // totalrevenue
+    // recentadvertisers
+
+    // /dashboard/totalbillboard
     // Other endpoints using predefined request functions
   })
 })
@@ -188,5 +236,15 @@ export const {
   useUpcomingAllOrdersQuery,
   useApproveContentMutation,
   useDisapproveContentMutation,
-  useWillToPayQuery
+  useWillToPayQuery,
+  useTotalBillboardQuery,
+  useRecentBillboardQuery,
+  useTotaladvertisersQuery,
+  useRecentadvertisersQuery,
+  useTotaladminsQuery,
+  useTotalrevenueQuery,
+  useAveragebidQuery,
+  useMonthlygrowthQuery,
+  useUserprofileQuery,
+  useUpdateuserprofileMutation
 } = GlobalApi

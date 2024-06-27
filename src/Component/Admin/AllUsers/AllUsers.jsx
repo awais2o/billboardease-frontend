@@ -13,6 +13,7 @@ import { Button, Form, OverlayTrigger, Tooltip } from 'react-bootstrap'
 import Swal from 'sweetalert2'
 import { formatDate } from '../../../utils/DateFormat'
 import { renderTooltip } from '../../../utils/Tooltip'
+import Footer from '../../Footer'
 // import  from 'bootstrap-icons'
 const AllUSers = () => {
   const { data, isLoading, error, isError, refetch } = useGetAllUsersQuery()
@@ -124,33 +125,32 @@ const AllUSers = () => {
                 onChange={handleSearchInputChange}
               />
             </div>
-          </div>
-        </div>
-        <div className='col-12 mt-3'>
-          <div className='col-12 d-flex justify-content-end'>
-            <label
-              style={{
-                display: 'flex',
-                whiteSpace: 'nowrap',
-                fontWeight: 'normal'
-              }}
-            >
-              <small className='mt-2 title'> Show</small>
-              <Form.Select
-                aria-label='Change Page size'
-                onChange={handlePageSizeChange}
-                defaultValue={10}
-                className='ms-2 me-3'
+            <div className='col-12 col-md-6 mt-2 mt-md-0 d-flex justify-content-end'>
+              <label
+                style={{
+                  display: 'flex',
+                  whiteSpace: 'nowrap',
+                  fontWeight: 'normal'
+                }}
               >
-                <option value='10'>10</option>
-                <option value='20'>20</option>
-                <option value='30'>30</option>
-                <option value='50'>50</option>
-              </Form.Select>
-              <small className='mt-2'> entries</small>
-            </label>
+                <small className='mt-2 title'> Show</small>
+                <Form.Select
+                  aria-label='Change Page size'
+                  onChange={handlePageSizeChange}
+                  defaultValue={10}
+                  className='ms-2 me-3'
+                >
+                  <option value='10'>10</option>
+                  <option value='20'>20</option>
+                  <option value='30'>30</option>
+                  <option value='50'>50</option>
+                </Form.Select>
+                <small className='mt-2'> entries</small>
+              </label>
+            </div>
           </div>
         </div>
+
         <div className='container-fluid card m-0 mt-3 p-0 w-100 col-12'>
           <div className='table-responsive'>
             <table className='table mt-4'>
@@ -242,6 +242,7 @@ const AllUSers = () => {
           </div>
         </div>
       </section>
+      <Footer />
       {/* {task === 'add' && display ? (
         <>
           <AddBillboard setDisplay={setDisplay} display={display} tags={tags} />

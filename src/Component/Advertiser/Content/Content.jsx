@@ -10,6 +10,7 @@ import Swal from 'sweetalert2'
 import AddContent from './AddContent'
 import { formatDate } from '../../../utils/DateFormat'
 import VideoPopup from './VideoPopup'
+import Footer from '../../Footer'
 // import ImagePopup from './ImagePopup'
 // import  from 'bootstrap-icons'
 const Content = () => {
@@ -162,7 +163,7 @@ const Content = () => {
                   <th>Actions</th>
                 </tr>
               </thead>
-              {!isLoading && data && (
+              {!isLoading && data ? (
                 <tbody>
                   {currentItems?.map(item => {
                     return (
@@ -204,6 +205,22 @@ const Content = () => {
                     )
                   })}
                 </tbody>
+              ) : isLoading ? (
+                <>
+                  <tbody>
+                    <tr>
+                      <td>Data Loading...</td>
+                    </tr>
+                  </tbody>
+                </>
+              ) : (
+                <>
+                  <tbody>
+                    <tr>
+                      <td>No Data</td>
+                    </tr>
+                  </tbody>
+                </>
               )}
             </table>
             {data && (
@@ -222,6 +239,7 @@ const Content = () => {
           </div>
         </div>
       </section>
+      <Footer />
       {task === 'add' && display ? (
         <>
           <AddContent

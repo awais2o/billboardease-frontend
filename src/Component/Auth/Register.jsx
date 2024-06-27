@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { useLoginMutation, useRegisterMutation } from '../../redux/GlobalApi'
-import { Button, Form, Modal } from 'react-bootstrap'
+import { Button, Col, Form, Modal, Row } from 'react-bootstrap'
 import Cookies from 'js-cookie'
 import toast from 'react-hot-toast'
 import { jwtDecode } from 'jwt-decode'
@@ -59,7 +59,7 @@ function Register ({ login }) {
       Cookies.set('Authorization', loginResults?.data?.token)
       const decoded = jwtDecode(loginResults?.data?.token)
       Cookies.set('user_id', decoded.user_id)
-      setUser( decoded.user_id)
+      setUser(decoded.user_id)
       localStorage.setItem('role', loginResults?.data?.role)
       console.log(typeof loginResults?.data?.role)
       loginResults?.data?.role === 1
@@ -80,11 +80,17 @@ function Register ({ login }) {
       setInput()
       navigate('/login')
     }
-    if (loginResults.isError) {
-      alert(loginResults.error.error)
+    if (loginResults.isError && login) {
+      alert(
+        loginResults.error.status + ' : ' + loginResults.error.data.error ||
+          JSON.stringify(loginResults)
+      )
     }
-    if (results.isError) {
-      alert(loginResults.error.error)
+    if (results.isError && !login) {
+      alert(
+        results.error.status + ' : ' + results.error.data.error ||
+          JSON.stringify(results)
+      )
     }
     //  else {
     //   toast.success('Register  Fail', {
@@ -137,9 +143,32 @@ function Register ({ login }) {
                     }}
                   ></Form.Control>
                 </Form.Group>
+                <Row>
+                  <Col>
+                    {' '}
+                    <p
+                      onClick={() => {
+                        login ? navigate('/register') : navigate('/login')
+                      }}
+                      className='small'
+                      style={{ color: 'blue', cursor: 'pointer' }}
+                    >
+                      {login
+                        ? 'Create a new Account'
+                        : 'Alreaady have a account'}
+                    </p>
+                    <style>
+                      {`
+          .small:hover {
+            text-decoration: underline;
+          }
+        `}
+                    </style>
+                  </Col>
+                </Row>
                 <Button className='mt-3' type='submit'>
                   {' '}
-                  Register
+                  {!login ? 'Register' : 'Login'}
                 </Button>
               </Form>
 

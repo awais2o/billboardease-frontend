@@ -6,30 +6,26 @@ import {
   useAddMyContentMutation,
   useUpdateMyContentMutation
 } from '../../../redux/GlobalApi'
-import toast, { LoaderIcon } from 'react-hot-toast'
+import toast from 'react-hot-toast'
 import Cookies from 'js-cookie'
-
 import axios from 'axios'
+
 const baseUrl = process.env.REACT_APP_API_URL
 
 const AddContent = ({ display, setDisplay, data, update }) => {
   const authtoken = Cookies.get('Authorization')
-
-  console.log({ data })
   const [formData, setFormData] = useState({})
+  const [uploading, setUploading] = useState(false) // Track file upload status
+
   useEffect(() => {
     if (data && update) {
       setFormData(data)
     }
   }, [data])
-  useEffect(() => {
-    console.log({ formData })
-  }, [formData])
-  useEffect(() => {
-    console.log(formData)
-  }, [formData])
+
   const [addContent, results] = useAddMyContentMutation()
   const [updateContent, updateResults] = useUpdateMyContentMutation()
+
   const handleChange = e => {
     const { name, value } = e.target
     setFormData({ ...formData, [name]: value })
@@ -37,9 +33,6 @@ const AddContent = ({ display, setDisplay, data, update }) => {
 
   const handleSubmit = e => {
     e.preventDefault()
-    // Add your submit logic here, e.g., sending data to the server
-    console.log(formData)
-    //
     if (!update) {
       addContent({ input: formData })
     } else {
@@ -47,9 +40,10 @@ const AddContent = ({ display, setDisplay, data, update }) => {
       updateContent({ input: newContent, id: content_id })
     }
   }
+
   useEffect(() => {
     if (results.isSuccess) {
-      toast.success('Content Added  Successfully', {
+      toast.success('Content Added Successfully', {
         style: {
           borderRadius: '10px',
           background: '#333',
@@ -59,7 +53,7 @@ const AddContent = ({ display, setDisplay, data, update }) => {
       setDisplay(false)
     }
     if (updateResults.isSuccess) {
-      toast.success('Content Update  Successfully', {
+      toast.success('Content Updated Successfully', {
         style: {
           borderRadius: '10px',
           background: '#333',
@@ -70,18 +64,13 @@ const AddContent = ({ display, setDisplay, data, update }) => {
     }
   }, [updateResults, results])
 
-  const [selectedFile, setSelectedFile] = useState(null)
-
-  // Function to handle file change
   const handleFileChange = async event => {
-    const file = event.target.files[0] // Get the selected file
-    console.log(file)
-    // Create formData object to send file data
+    const file = event.target.files[0]
     const formData = new FormData()
     formData.append('file', file)
+    setUploading(true) // Set uploading to true when the upload starts
 
     try {
-      // Make API call to upload the file
       const response = await axios.post(
         `${baseUrl}/media/uploadfile`,
         formData,
@@ -93,17 +82,15 @@ const AddContent = ({ display, setDisplay, data, update }) => {
         }
       )
 
+      setFormData(formData => ({
+        ...formData,
+        filepath: response?.data?.url
+      }))
       console.log('File uploaded successfully:', response.data)
-      setFormData(formdata => {
-        return {
-          ...formdata,
-          filepath: response?.data?.url
-        }
-      })
-      // Do something with the response if needed
     } catch (error) {
       console.error('Error uploading file:', error)
-      // Handle error
+    } finally {
+      setUploading(false) // Set uploading to false when the upload ends
     }
   }
 
@@ -118,12 +105,11 @@ const AddContent = ({ display, setDisplay, data, update }) => {
         keyboard={false}
         className='w-10'
       >
-        <Modal.Header closeButton className=''>
+        <Modal.Header closeButton>
           <Modal.Title as='h5'>
             {!update ? 'Add Content' : 'Update Content'}
-            {/* {operateId ? 'Update Asset' : 'Add Asset'}{' '} */}
           </Modal.Title>
-        </Modal.Header>{' '}
+        </Modal.Header>
         <Modal.Body>
           <Container>
             <Row>
@@ -170,15 +156,20 @@ const AddContent = ({ display, setDisplay, data, update }) => {
                       onChange={handleFileChange}
                     />
                   </Form.Group>
-                  {!update ? (
-                    <Button disabled={results.isLoading} type='submit'>
-                      Add
-                    </Button>
-                  ) : (
-                    <Button disabled={results.isLoading} type='submit'>
-                      Update
-                    </Button>
+                  {uploading && (
+                    <div>
+                      {' '}
+                      <b className='mt-1 mb-1 text-info'>Uploading...</b>
+                    </div>
                   )}
+
+                  <Button
+                    disabled={results.isLoading || uploading}
+                    type='submit'
+                    className='mt-2'
+                  >
+                    {!update ? 'Add' : 'Update'}
+                  </Button>
                 </Form>
               </Col>
             </Row>

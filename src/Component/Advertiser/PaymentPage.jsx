@@ -11,6 +11,7 @@ import { useWillToPayQuery } from '../../redux/GlobalApi'
 import PaymentButton from './Proceeding/PaymentButton'
 import SelectContent from './Proceeding/SelectContent'
 import MyNav from '../Admin/MyNav'
+import Footer from '../Footer'
 
 // import { formatDate } from '../../../utils/ DateFormat'
 
@@ -127,7 +128,7 @@ const PaymentPage = () => {
                   <th>Action</th>
                 </tr>
               </thead>
-              {!isLoading && data?.orders && (
+              {!isLoading && data?.orders ? (
                 <tbody>
                   {data?.orders?.map(order => (
                     <tr key={order.order_id}>
@@ -164,6 +165,18 @@ const PaymentPage = () => {
                     </tr>
                   ))}
                 </tbody>
+              ) : isLoading ? (
+                <tbody>
+                  <tr>
+                    <td>Data is Loading</td>
+                  </tr>
+                </tbody>
+              ) : (
+                <tbody>
+                  <tr>
+                    <td>No Pending Payments</td>
+                  </tr>
+                </tbody>
               )}
             </table>
             {data?.orders && (
@@ -179,6 +192,7 @@ const PaymentPage = () => {
           </div>
         </div>
       </section>
+      <Footer />
       <PaymentButton
         // amount={100000}
         amount={toPay * 100}

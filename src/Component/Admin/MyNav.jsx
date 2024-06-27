@@ -9,7 +9,12 @@ const MyNav = () => {
   console.log({ role })
   return (
     <>
-      <Navbar collapseOnSelect expand='lg' className='bg-body-tertiary'>
+      <Navbar
+        collapseOnSelect
+        expand='lg'
+        className='bg-body-tertiary'
+        style={{ position: 'sticky', top: 0, zIndex: 1000 }}
+      >
         <Container>
           <Navbar.Brand
             onClick={() => {
@@ -71,7 +76,7 @@ const MyNav = () => {
                   </Nav.Link>
                   <Nav.Link
                     onClick={() => {
-                      nav('/advertise')
+                      nav('/profile')
                     }}
                   >
                     Profile

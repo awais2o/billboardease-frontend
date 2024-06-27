@@ -9,6 +9,7 @@ import { Button, Form, OverlayTrigger, Tooltip } from 'react-bootstrap'
 import AddBillboard from './AddBillboard'
 import Swal from 'sweetalert2'
 import ImagePopup from './ImagePopup'
+import Footer from '../../Footer'
 // import  from 'bootstrap-icons'
 const Billboards = () => {
   const { data, isLoading, error, isError, refetch } = useGetBillboardQuery()
@@ -244,6 +245,7 @@ const Billboards = () => {
           </div>
         </div>
       </section>
+      <Footer />
       {task === 'add' && display ? (
         <>
           <AddBillboard setDisplay={setDisplay} display={display} tags={tags} />
