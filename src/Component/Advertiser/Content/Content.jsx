@@ -120,7 +120,7 @@ const Content = () => {
                 placement='top'
                 overlay={<Tooltip id='tooltip'>Add Content</Tooltip>}
               >
-                <Button className='send-invoice-btn btn btn-primary'>
+                <Button className=' btn btn-light border border-secondary  custom-hover'>
                   Add Content
                 </Button>
               </OverlayTrigger>
@@ -181,7 +181,12 @@ const Content = () => {
                                 setOperate(item)
                               }}
                             >
-                              <img src='/images/eye.svg' alt='Eye' />
+                              <OverlayTrigger
+                                placement='top'
+                                overlay={<Tooltip id='tooltip'>View</Tooltip>}
+                              >
+                                <img src='/images/eye.svg' alt='Eye' />
+                              </OverlayTrigger>
                             </div>
                             <div
                               onClick={() => {
@@ -190,14 +195,28 @@ const Content = () => {
                                 setOperate(item)
                               }}
                             >
-                              <img src='/images/pen.svg' alt='Pen' />
+                              <OverlayTrigger
+                                placement='top'
+                                overlay={
+                                  <Tooltip id='tooltip'>Edit Content</Tooltip>
+                                }
+                              >
+                                <img src='/images/pen.svg' alt='Pen' />
+                              </OverlayTrigger>
                             </div>
                             <div
                               onClick={() => {
                                 handleDelete(item.content_id)
                               }}
                             >
-                              <img src='/images/trash3.svg' alt='Pen' />
+                              <OverlayTrigger
+                                placement='top'
+                                overlay={
+                                  <Tooltip id='tooltip'>Delete Content</Tooltip>
+                                }
+                              >
+                                <img src='/images/trash3.svg' alt='Pen' />
+                              </OverlayTrigger>
                             </div>
                           </div>
                         </td>

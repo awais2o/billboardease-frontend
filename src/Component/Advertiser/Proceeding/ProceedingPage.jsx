@@ -130,7 +130,14 @@ const ProceedingPage = () => {
                               setOperate(item)
                             }}
                           >
-                            <img src='/images/folder-plus.svg' alt='Eye' />
+                            <OverlayTrigger
+                              placement='top'
+                              overlay={
+                                <Tooltip id='tooltip'>Add Content</Tooltip>
+                              }
+                            >
+                              <img src='/images/folder-plus.svg' alt='Eye' />
+                            </OverlayTrigger>
                           </div>
                         </td>
                       </tr>

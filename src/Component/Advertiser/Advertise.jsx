@@ -10,6 +10,7 @@ import Swal from 'sweetalert2'
 import AddToWishlist from './AddToWishlist'
 import { BidPage } from './BidPage'
 import Footer from '../Footer'
+import ImagePopup from '../Admin/Billboard/ImagePopup'
 
 const Advertise = () => {
   const { data, isLoading, error, isError, refetch } = useGetBillboardQuery()
@@ -159,19 +160,20 @@ const Advertise = () => {
                         </p>
                         <p className='card-text'>Tag: {tagName}</p>
                       </div>
-                      <div className='card-footer'>
+                      <div className='card-footer d-flex align-items-center'>
+                        {/* <button
+    className='btn btn-primary'
+    onClick={() => {
+      setDisplay(true)
+      setTask('wishlist')
+      setOperate(item)
+    }}
+  >
+    Add to Wishlist
+  </button> */}
+
                         <button
-                          className='btn btn-primary'
-                          onClick={() => {
-                            setDisplay(true)
-                            setTask('wishlist')
-                            setOperate(item)
-                          }}
-                        >
-                          Add to Wishlist
-                        </button>
-                        <button
-                          className='btn btn-secondary ms-2'
+                          className='btn btn-inherit border border-secondary ms-2 custom-hover'
                           onClick={() => {
                             setDisplay(true)
                             setTask('bid')
@@ -180,6 +182,25 @@ const Advertise = () => {
                         >
                           Make Bid
                         </button>
+                        <div
+                          className='ms-4'
+                          onClick={() => {
+                            setDisplay(true)
+                            setTask('view')
+                            setOperate(item)
+                          }}
+                        >
+                          <OverlayTrigger
+                            placement='top'
+                            overlay={<Tooltip id='tooltip'>View</Tooltip>}
+                          >
+                            <img
+                              src='/images/eye.svg'
+                              alt='Eye'
+                              // className=' custom-hover'
+                            />
+                          </OverlayTrigger>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -220,6 +241,12 @@ const Advertise = () => {
             billboard={operate}
           />
         </>
+      ) : task === 'view' && display ? (
+        <ImagePopup
+          setDisplay={setDisplay}
+          display={display}
+          image={operate?.image}
+        />
       ) : (
         <></>
       )}

@@ -1,6 +1,14 @@
 import React from 'react'
-import { Container, Navbar, Nav, Button } from 'react-bootstrap'
+import {
+  Container,
+  Navbar,
+  Nav,
+  Button,
+  Tooltip,
+  OverlayTrigger
+} from 'react-bootstrap'
 import { useNavigate } from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
 import Cookies from 'js-cookie'
 
 const MyNav = () => {
@@ -12,8 +20,15 @@ const MyNav = () => {
       <Navbar
         collapseOnSelect
         expand='lg'
-        className='bg-body-tertiary'
-        style={{ position: 'sticky', top: 0, zIndex: 1000 }}
+        className='bg-body-tertiary navbar-wave '
+        style={{
+          position: 'sticky',
+          top: 0,
+          zIndex: 1000
+          // backgroundColor: 'black',
+          // color: 'white'
+          // backgroundColor: #0000
+        }}
       >
         <Container>
           <Navbar.Brand
@@ -28,75 +43,84 @@ const MyNav = () => {
             {+role === 1 ? (
               <Nav className='me-auto'>
                 <Nav.Link
-                  onClick={() => {
-                    nav('/billboard')
-                  }}
+                  as={NavLink}
+                  to='/billboard'
+                  activeClassName='active-link'
                 >
                   Billboards
                 </Nav.Link>
                 <Nav.Link
-                  onClick={() => {
-                    nav('/allusers')
-                  }}
+                  as={NavLink}
+                  to='/allusers'
+                  activeClassName='active-link'
                 >
-                  All User
+                  All Users
                 </Nav.Link>
-
                 <Nav.Link
-                  onClick={() => {
-                    nav('/approve-content')
-                  }}
+                  as={NavLink}
+                  to='/approve-content'
+                  activeClassName='active-link'
                 >
                   Approve
                 </Nav.Link>
+                <Nav.Link
+                  as={NavLink}
+                  to='/adminProfile'
+                  activeClassName='active-link'
+                >
+                  Profile
+                </Nav.Link>
               </Nav>
             ) : +role === 2 ? (
-              <>
-                <Nav className='me-auto'>
-                  <Nav.Link
-                    onClick={() => {
-                      nav('/content')
-                    }}
-                  >
-                    My Content
-                  </Nav.Link>
-                  <Nav.Link
-                    onClick={() => {
-                      nav('/proceed')
-                    }}
-                  >
-                    Proceeding
-                  </Nav.Link>
-                  <Nav.Link
-                    onClick={() => {
-                      nav('/payment')
-                    }}
-                  >
-                    Pending Payment
-                  </Nav.Link>
-                  <Nav.Link
-                    onClick={() => {
-                      nav('/profile')
-                    }}
-                  >
-                    Profile
-                  </Nav.Link>
-                </Nav>
-              </>
+              <Nav className='me-auto'>
+                <Nav.Link
+                  as={NavLink}
+                  to='/content'
+                  activeClassName='active-link'
+                >
+                  My Content
+                </Nav.Link>
+                <Nav.Link
+                  as={NavLink}
+                  to='/proceed'
+                  activeClassName='active-link'
+                >
+                  Proceeding
+                </Nav.Link>
+                <Nav.Link
+                  as={NavLink}
+                  to='/payment'
+                  activeClassName='active-link'
+                >
+                  Pending Payment
+                </Nav.Link>
+                <Nav.Link
+                  as={NavLink}
+                  to='/profile'
+                  activeClassName='active-link'
+                >
+                  Profile
+                </Nav.Link>
+              </Nav>
             ) : (
               <></>
             )}
             <Nav>
-              <Nav.Link
-                className='me-3'
-                onClick={e => {
-                  Cookies.remove('Authorization')
-                  localStorage.removeItem('role')
-                  nav('/login')
-                }}
+              <OverlayTrigger
+                placement='bottom'
+                overlay={<Tooltip id='tooltip'>Signout</Tooltip>}
               >
-                Signout
-              </Nav.Link>
+                <Nav.Link
+                  className='me-3 custom-hover btn p-2'
+                  onClick={e => {
+                    Cookies.remove('Authorization')
+                    localStorage.removeItem('role')
+                    nav('/login')
+                  }}
+                >
+                  Signout
+                </Nav.Link>
+              </OverlayTrigger>
             </Nav>
           </Navbar.Collapse>
         </Container>

@@ -126,7 +126,7 @@ const Billboards = () => {
                 placement='top'
                 overlay={<Tooltip id='tooltip'>Add Billboard</Tooltip>}
               >
-                <Button className='send-invoice-btn btn btn-primary'>
+                <Button className='send-invoice-btn btn btn-light border border-secondary  custom-hover'>
                   Add Billboard
                 </Button>
               </OverlayTrigger>
@@ -203,7 +203,12 @@ const Billboards = () => {
                                 setOperate(item)
                               }}
                             >
-                              <img src='/images/eye.svg' alt='Eye' />
+                              <OverlayTrigger
+                                placement='top'
+                                overlay={<Tooltip id='tooltip'>View</Tooltip>}
+                              >
+                                <img src='/images/eye.svg' alt='Eye' />
+                              </OverlayTrigger>
                             </div>
                             <div
                               onClick={() => {
@@ -212,14 +217,32 @@ const Billboards = () => {
                                 setOperate(item)
                               }}
                             >
-                              <img src='/images/pen.svg' alt='Pen' />
+                              <OverlayTrigger
+                                placement='top'
+                                overlay={
+                                  <Tooltip id='tooltip'>
+                                    Update Billboard
+                                  </Tooltip>
+                                }
+                              >
+                                <img src='/images/pen.svg' alt='Pen' />
+                              </OverlayTrigger>
                             </div>
                             <div
                               onClick={() => {
                                 handleDelete(item.billboard_id)
                               }}
                             >
-                              <img src='/images/trash3.svg' alt='Pen' />
+                              <OverlayTrigger
+                                placement='top'
+                                overlay={
+                                  <Tooltip id='tooltip'>
+                                    Delete Billboard
+                                  </Tooltip>
+                                }
+                              >
+                                <img src='/images/trash3.svg' alt='Pen' />
+                              </OverlayTrigger>
                             </div>
                           </div>
                         </td>

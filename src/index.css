@@ -25,3 +25,45 @@
     ;
     color: #00cfe8 !important;
 }
+
+.custom-hover:hover {
+    background-color: var(--bs-primary) !important;
+    color: white !important;
+    /* Adjust if you need to change the text color on hover */
+}
+
+.active {
+    text-decoration: underline !important;
+}
+
+/* Define the animation */
+@keyframes wave {
+    0% {
+        background-position: 0% 0%;
+    }
+
+    100% {
+        background-position: 100% 0%;
+    }
+}
+
+/* Apply the animation to the wave */
+.navbar-wave {
+    position: relative;
+    overflow: hidden;
+    background-color: var(--bs-body-tertiary);
+}
+
+.navbar-wave::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 200%;
+    height: 100%;
+    background: linear-gradient(270deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.1));
+    background-size: 400% 400%;
+    animation: wave 10s linear infinite;
+    pointer-events: none;
+    /* Ensures the wave doesn't interfere with clicks */
+}

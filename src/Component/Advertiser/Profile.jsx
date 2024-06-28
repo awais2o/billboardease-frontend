@@ -70,6 +70,7 @@ const Profile = () => {
   return (
     <>
       <MyNav />
+
       <Container>
         <Row className='justify-content-center'>
           <Col md={8}>
@@ -125,14 +126,14 @@ const Profile = () => {
                   readOnly={!editable}
                 />
               </Form.Group>
-              <Form.Group controlId='formStatus'>
+              <Form.Group className='' controlId='formStatus'>
                 <Form.Label>Status</Form.Label>
                 <Form.Control
                   type='text'
                   name='status'
-                  value={formData.status}
+                  value={formData.status === 1 ? 'Active' : 'Inactive'}
                   onChange={handleChange}
-                  readOnly={!editable}
+                  readOnly
                 />
               </Form.Group>
               <Form.Group controlId='formUsertypeId'>
@@ -140,14 +141,14 @@ const Profile = () => {
                 <Form.Control
                   type='text'
                   name='usertype_id'
-                  value={formData.usertype_id}
+                  value={formData.usertype_id === 1 ? 'Admin' : 'Advertiser'}
                   onChange={handleChange}
-                  readOnly={!editable}
+                  readOnly
                 />
               </Form.Group>
               <Button
-                variant='primary'
-                className='mt-2'
+                // variant='primary'
+                className='mt-2 btn btn-light border border-secondary  custom-hover'
                 onClick={() => setEditable(!editable)}
               >
                 {editable ? 'Cancel' : 'Edit'}

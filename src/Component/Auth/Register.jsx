@@ -34,7 +34,16 @@ function Register ({ login }) {
     }
   }, [])
   const navigate = useNavigate() // Hook used here at the top level
-
+  useEffect(() => {
+    let userid = Cookies.get('Authorization')
+    let role = localStorage.getItem('role')
+    if (role === 1 && userid) {
+      navigate('/advertise')
+    }
+    if (role === 2 && userid) {
+      navigate('/admin')
+    }
+  }, [])
   // useEffect(() => {
   //   if (user) {
   //     navigate('/admin')
@@ -43,11 +52,16 @@ function Register ({ login }) {
   const [input, setInput] = useState({ cnic: '', password: '' })
   const [doRegister, results] = useRegisterMutation()
   const [doLogin, loginResults] = useLoginMutation()
+  const [error, setError] = useState(false)
   const handleSubmit = e => {
     e.preventDefault()
     e.stopPropagation()
-
-    !login ? doRegister({ input }) : doLogin({ input })
+    if (!login && retry !== input?.password) {
+      setError(true)
+    } else {
+      setError(false)
+      !login ? doRegister({ input }) : doLogin({ input })
+    }
   }
   useEffect(() => {
     if (
@@ -102,7 +116,7 @@ function Register ({ login }) {
     //   })
     // }
   }, [results, loginResults])
-
+  const [retry, setRetry] = useState('')
   return (
     <MDBContainer fluid style={{ minHeight: '90vh' }}>
       <MDBCard
@@ -126,6 +140,7 @@ function Register ({ login }) {
                   <Form.Control
                     required
                     type='text'
+                    pattern='\d{13}'
                     value={input?.cnic || ''}
                     onChange={e => {
                       setInput({ ...input, cnic: e.target.value })
@@ -143,6 +158,23 @@ function Register ({ login }) {
                     }}
                   ></Form.Control>
                 </Form.Group>
+                {!login && (
+                  <Form.Group controlId='rechecck' className='mb-3'>
+                    <Form.Label>Re Enter Password</Form.Label>
+                    <Form.Control
+                      required
+                      type='password'
+                      value={retry}
+                      onChange={e => {
+                        setRetry(e.target.value)
+                        // setInput({ ...input, password: e.target.value })
+                      }}
+                    ></Form.Control>
+                    {error && (
+                      <p className='text-danger'>Password donot match</p>
+                    )}
+                  </Form.Group>
+                )}
                 <Row>
                   <Col>
                     {' '}
@@ -155,7 +187,7 @@ function Register ({ login }) {
                     >
                       {login
                         ? 'Create a new Account'
-                        : 'Alreaady have a account'}
+                        : 'Alreaady have a Account'}
                     </p>
                     <style>
                       {`

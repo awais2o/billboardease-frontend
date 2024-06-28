@@ -91,7 +91,14 @@ const App = () => {
                 </ProtectedRoute>
               }
             />
-
+            <Route
+              path='/adminProfile'
+              element={
+                <ProtectedRoute roleRequired={1}>
+                  <Profile />
+                </ProtectedRoute>
+              }
+            />
             <Route
               path='/content'
               element={

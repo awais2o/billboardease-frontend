@@ -214,9 +214,6 @@
 //   )
 // }
 
-
-
-
 import React, { useState, useEffect, useContext } from 'react'
 import { Form, Modal, Button } from 'react-bootstrap'
 import io from 'socket.io-client'
@@ -258,7 +255,7 @@ export const BidPage = ({ billboard, display, setDisplay }) => {
   const [lastBidTime, setLastBidTime] = useState(null) // Initialize as null
   const [canBid, setCanBid] = useState(true) // Initialize as true
   const [countdown, setCountdown] = useState(60) // 60 seconds countdown
-
+  console.log({ bid, value })
   useEffect(() => {
     const roomName = `${billboard.billboard_id}_${forDateTime}`
     console.log(`Joining room: ${roomName}`)
@@ -309,22 +306,27 @@ export const BidPage = ({ billboard, display, setDisplay }) => {
       return () => clearInterval(interval)
     }
   }, [lastBidTime])
-
+  const [error, setError] = useState()
   const handleBidSubmit = () => {
-    setLastBidTime(Date.now())
-    setCanBid(false)
-    setCountdown(60) // Reset countdown
+    if (value < bid + 1) {
+      setError(true)
+    } else {
+      setError(false)
+      setLastBidTime(Date.now())
+      setCanBid(false)
+      setCountdown(60) // Reset countdown
 
-    socket.emit('bid', {
-      bid: value,
-      dateTime: forDateTime,
-      billboard_id: billboard?.billboard_id,
-      user_id: user_id // Use the user_id from the cookie
-    })
+      socket.emit('bid', {
+        bid: value,
+        dateTime: forDateTime,
+        billboard_id: billboard?.billboard_id,
+        user_id: user_id // Use the user_id from the cookie
+      })
 
-    console.log(
-      `Bid submitted for: ${forDateTime} on billboard ID: ${billboard?.billboard_id}`
-    )
+      console.log(
+        `Bid submitted for: ${forDateTime} on billboard ID: ${billboard?.billboard_id}`
+      )
+    }
   }
   console.log({ forDateTime })
   return (
@@ -335,15 +337,22 @@ export const BidPage = ({ billboard, display, setDisplay }) => {
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <p>Current Bid: {bid}</p>
-        <Form onSubmit={e => e.preventDefault()}>
+        <p>
+          {billboard?.baseprice === bid ? 'Base Price' : 'Current Bid '}: {bid}
+        </p>
+        <Form
+          onSubmit={e => {
+            e.preventDefault()
+          }}
+        >
           <Form.Group>
             <Form.Label>Your Bid</Form.Label>
             <Form.Control
               type='number'
               value={value}
               onChange={e => setValue(Number(e.target.value))}
-              min={bid + 500} // Enforce the minimum bid increment
+              // min={bid + 500} // Enforce the minimum bid increment
+              min={value + 500} // Enforce the minimum bid increment
               disabled={!canBid} // Disable input when not allowed to bid
             />
           </Form.Group>
@@ -355,6 +364,11 @@ export const BidPage = ({ billboard, display, setDisplay }) => {
           >
             Submit Bid
           </Button>
+          {error && (
+            <p className='text-danger'>
+              Bid should be greater than current valuation
+            </p>
+          )}
           {!canBid && (
             <p className='text-muted'>
               Please wait {countdown} seconds to place the next bid.
