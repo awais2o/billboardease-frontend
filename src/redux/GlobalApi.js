@@ -201,7 +201,12 @@ export const GlobalApi = createApi({
     updateuserprofile: builder.mutation({
       query: data => createUpdateRequest(`/auth/user/${data.user_id}`, data),
       invalidatesTags: ['userprofile']
+    }),
+    order: builder.mutation({
+      query: data => createPostRequest(`/bid/order/`, data),
+      invalidatesTags: ['order']
     })
+
     // monthlygrowth
     // averagebid
     // totalrevenue
@@ -246,5 +251,6 @@ export const {
   useAveragebidQuery,
   useMonthlygrowthQuery,
   useUserprofileQuery,
-  useUpdateuserprofileMutation
+  useUpdateuserprofileMutation,
+  useOrderMutation
 } = GlobalApi

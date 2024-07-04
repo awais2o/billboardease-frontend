@@ -96,13 +96,13 @@ function Register ({ login }) {
     }
     if (loginResults.isError && login) {
       alert(
-        loginResults.error.status + ' : ' + loginResults.error.data.error ||
+        loginResults?.error?.status + ' : ' + loginResults?.error?.data?.error ||
           JSON.stringify(loginResults)
       )
     }
     if (results.isError && !login) {
       alert(
-        results.error.status + ' : ' + results.error.data.error ||
+        results?.error?.status + ' : ' + results?.error?.data?.error ||
           JSON.stringify(results)
       )
     }

@@ -31,8 +31,11 @@ const AddBillboard = ({ display, setDisplay, tags, data, update }) => {
   const [addBillboard, results] = usePostBillboardMutation()
   const [updateBillboard, updateResults] = useUpdateBillboardMutation()
   const handleChange = e => {
-    const { name, value } = e.target
-    setFormData({ ...formData, [name]: value })
+    const { name, value, type } = e.target
+    setFormData(prevState => ({
+      ...prevState,
+      [name]: type === 'radio' ? parseInt(value, 10) : value
+    }))
   }
 
   const handleSubmit = e => {
@@ -262,6 +265,32 @@ const AddBillboard = ({ display, setDisplay, tags, data, update }) => {
                       />
                       <Form.Control.Feedback type='invalid'>
                         Please enter a valid dimension Y.
+                      </Form.Control.Feedback>
+                    </Col>
+                  </Form.Group>
+                  <Form.Group as={Col} className='mb-3' controlId='regular'>
+                    <Form.Label>Billoard Type</Form.Label>
+                    <Col sm='10'>
+                      <Form.Check
+                        type='radio'
+                        label='Regular Billboard'
+                        name='regular'
+                        value={1}
+                        checked={formData.regular === 1}
+                        onChange={handleChange}
+                        required
+                      />
+                      <Form.Check
+                        type='radio'
+                        label='Bidable  Billboard'
+                        name='regular'
+                        value={0}
+                        checked={formData.regular === 0}
+                        onChange={handleChange}
+                        required
+                      />
+                      <Form.Control.Feedback type='invalid'>
+                        Please select a value for regular.
                       </Form.Control.Feedback>
                     </Col>
                   </Form.Group>
