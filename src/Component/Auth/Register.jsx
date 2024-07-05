@@ -96,8 +96,9 @@ function Register ({ login }) {
     }
     if (loginResults.isError && login) {
       alert(
-        loginResults?.error?.status + ' : ' + loginResults?.error?.data?.error ||
-          JSON.stringify(loginResults)
+        loginResults?.error?.status +
+          ' : ' +
+          loginResults?.error?.data?.error || JSON.stringify(loginResults)
       )
     }
     if (results.isError && !login) {
@@ -141,6 +142,7 @@ function Register ({ login }) {
                     required
                     type='text'
                     pattern='\d{13}'
+                    title='Must be 13 digits cnic '
                     value={input?.cnic || ''}
                     onChange={e => {
                       setInput({ ...input, cnic: e.target.value })
@@ -156,7 +158,9 @@ function Register ({ login }) {
                     onChange={e => {
                       setInput({ ...input, password: e.target.value })
                     }}
-                  ></Form.Control>
+                    pattern='.{8,}'
+                    title='Password must be at least 8 characters long'
+                  />
                 </Form.Group>
                 {!login && (
                   <Form.Group controlId='rechecck' className='mb-3'>

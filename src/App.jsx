@@ -16,6 +16,7 @@ import PaymentPage from './Component/Advertiser/PaymentPage'
 import 'slick-carousel/slick/slick.css'
 import 'slick-carousel/slick/slick-theme.css'
 import Profile from './Component/Advertiser/Profile'
+import Tags from './Component/Admin/Tags/Tags'
 const App = () => {
   const [user, setUser] = useState(null)
   const [role, setRole] = useState(null)
@@ -43,6 +44,16 @@ const App = () => {
                 </ProtectedRoute>
               }
             />
+
+<Route
+              path='/tags'
+              element={
+                <ProtectedRoute roleRequired={1}>
+                  <Tags />
+                </ProtectedRoute>
+              }
+            />
+
             <Route
               path='/approve-content'
               element={

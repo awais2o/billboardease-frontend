@@ -455,7 +455,8 @@ const Advertise = () => {
                           Location: {item.location_address}
                         </p>
                         <p className='card-text'>
-                          Base Price: PKR {item.baseprice}
+                          Base Price: PKR {item.baseprice}{' '}
+                          {item?.regular ? '/DAY' : ''}
                         </p>
                         <p className='card-text'>Tag: {tagName}</p>
                       </div>

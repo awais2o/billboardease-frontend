@@ -101,6 +101,15 @@ export const GlobalApi = createApi({
       query: () => createRequest('/tags'),
       providesTags: ['tags']
     }),
+    createTags: builder.mutation({
+      query: data => createPostRequest('/tags', data),
+      invalidatesTags: ['tags']
+    }),
+    deleteTags: builder.mutation({
+      query: ({ id }) => createDeleteRequest(`/tags/${id}`),
+      invalidatesTags: ['tags']
+    }),
+
     getAllUsers: builder.query({
       query: () => createRequest('/allusers'),
       providesTags: ['allusers']
@@ -252,5 +261,7 @@ export const {
   useMonthlygrowthQuery,
   useUserprofileQuery,
   useUpdateuserprofileMutation,
-  useOrderMutation
+  useOrderMutation,
+  useCreateTagsMutation,
+  useDeleteTagsMutation
 } = GlobalApi

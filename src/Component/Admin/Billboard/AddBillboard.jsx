@@ -17,19 +17,21 @@ const AddBillboard = ({ display, setDisplay, tags, data, update }) => {
 
   console.log({ data })
   const [formData, setFormData] = useState({})
+  const [isUploading, setIsUploading] = useState(false)
+
   useEffect(() => {
     if (data && update) {
       setFormData(data)
     }
   }, [data])
+
   useEffect(() => {
     console.log({ formData })
   }, [formData])
-  useEffect(() => {
-    console.log(formData)
-  }, [formData])
+
   const [addBillboard, results] = usePostBillboardMutation()
   const [updateBillboard, updateResults] = useUpdateBillboardMutation()
+
   const handleChange = e => {
     const { name, value, type } = e.target
     setFormData(prevState => ({
@@ -40,9 +42,7 @@ const AddBillboard = ({ display, setDisplay, tags, data, update }) => {
 
   const handleSubmit = e => {
     e.preventDefault()
-    // Add your submit logic here, e.g., sending data to the server
     console.log(formData)
-    //
     if (!update) {
       addBillboard({ input: formData })
     } else {
@@ -50,9 +50,10 @@ const AddBillboard = ({ display, setDisplay, tags, data, update }) => {
       updateBillboard({ input: newBillboard, id: billboard_id })
     }
   }
+
   useEffect(() => {
     if (results.isSuccess) {
-      toast.success('Billlboard Added  Successfully', {
+      toast.success('Billboard Added Successfully', {
         style: {
           borderRadius: '10px',
           background: '#333',
@@ -62,7 +63,7 @@ const AddBillboard = ({ display, setDisplay, tags, data, update }) => {
       setDisplay(false)
     }
     if (updateResults.isSuccess) {
-      toast.success('Billlboard Update  Successfully', {
+      toast.success('Billboard Updated Successfully', {
         style: {
           borderRadius: '10px',
           background: '#333',
@@ -72,22 +73,19 @@ const AddBillboard = ({ display, setDisplay, tags, data, update }) => {
       setDisplay(false)
     }
   }, [updateResults, results])
+
   const tagOptions = tags?.tags?.map(tag => ({
     value: tag?.tag_id,
     label: tag?.tag_name
   }))
-  const [selectedFile, setSelectedFile] = useState(null)
 
-  // Function to handle file change
   const handleFileChange = async event => {
-    const file = event.target.files[0] // Get the selected file
-
-    // Create formData object to send file data
+    const file = event.target.files[0]
     const formData = new FormData()
     formData.append('file', file)
+    setIsUploading(true)
 
     try {
-      // Make API call to upload the file
       const response = await axios.post(
         `${baseUrl}/media/uploadfile`,
         formData,
@@ -100,16 +98,14 @@ const AddBillboard = ({ display, setDisplay, tags, data, update }) => {
       )
 
       console.log('File uploaded successfully:', response.data)
-      setFormData(formdata => {
-        return {
-          ...formdata,
-          image: response?.data?.url
-        }
-      })
-      // Do something with the response if needed
+      setFormData(formdata => ({
+        ...formdata,
+        image: response?.data?.url
+      }))
     } catch (error) {
       console.error('Error uploading file:', error)
-      // Handle error
+    } finally {
+      setIsUploading(false)
     }
   }
 
@@ -127,9 +123,8 @@ const AddBillboard = ({ display, setDisplay, tags, data, update }) => {
         <Modal.Header closeButton className=''>
           <Modal.Title as='h5'>
             {!update ? 'Add Billboard' : 'Update Billboard'}
-            {/* {operateId ? 'Update Asset' : 'Add Asset'}{' '} */}
           </Modal.Title>
-        </Modal.Header>{' '}
+        </Modal.Header>
         <Modal.Body>
           <Container>
             <Row>
@@ -141,7 +136,7 @@ const AddBillboard = ({ display, setDisplay, tags, data, update }) => {
                       <Form.Control
                         required
                         type='text'
-                        pattern='[a-zA-Z].*' // Starts with text
+                        pattern='[a-zA-Z].*'
                         name='title'
                         value={formData.title}
                         onChange={handleChange}
@@ -162,11 +157,11 @@ const AddBillboard = ({ display, setDisplay, tags, data, update }) => {
                         onChange={handleChange}
                       />
                       <Form.Control.Feedback type='invalid'>
-                        Please enter a title starting with text.
+                        Please enter a valid base price.
                       </Form.Control.Feedback>
                     </Col>
                   </Form.Group>
-                  <Form.Group as={Col} className='mb-3' controlId='quanity'>
+                  <Form.Group as={Col} className='mb-3' controlId='quantity'>
                     <Form.Label>Quantity (Series)</Form.Label>
                     <Col sm='10'>
                       <Form.Control
@@ -177,7 +172,7 @@ const AddBillboard = ({ display, setDisplay, tags, data, update }) => {
                         onChange={handleChange}
                       />
                       <Form.Control.Feedback type='invalid'>
-                        Please enter a title starting with text.
+                        Please enter a valid quantity.
                       </Form.Control.Feedback>
                     </Col>
                   </Form.Group>
@@ -200,14 +195,13 @@ const AddBillboard = ({ display, setDisplay, tags, data, update }) => {
                       </Form.Control.Feedback>
                     </Col>
                   </Form.Group>
-
                   <Form.Group as={Col} className='mb-3' controlId='longitude'>
                     <Form.Label>Longitude</Form.Label>
                     <Col sm='10'>
                       <Form.Control
                         required
                         type='number'
-                        pattern='-?\d*\.?\d+' // Number pattern
+                        pattern='-?\d*\.?\d+'
                         name='longitude'
                         value={formData.longitude}
                         onChange={handleChange}
@@ -217,14 +211,13 @@ const AddBillboard = ({ display, setDisplay, tags, data, update }) => {
                       </Form.Control.Feedback>
                     </Col>
                   </Form.Group>
-
                   <Form.Group as={Col} className='mb-3' controlId='latitude'>
                     <Form.Label>Latitude</Form.Label>
                     <Col sm='10'>
                       <Form.Control
                         required
                         type='number'
-                        pattern='-?\d*\.?\d+' // Number pattern
+                        pattern='-?\d*\.?\d+'
                         name='latitude'
                         value={formData.latitude}
                         onChange={handleChange}
@@ -234,14 +227,13 @@ const AddBillboard = ({ display, setDisplay, tags, data, update }) => {
                       </Form.Control.Feedback>
                     </Col>
                   </Form.Group>
-
                   <Form.Group as={Col} className='mb-3' controlId='dimension_x'>
-                    <Form.Label>Dimension X</Form.Label>
+                    <Form.Label>Dimension X (ft)</Form.Label>
                     <Col sm='10'>
                       <Form.Control
                         required
                         type='number'
-                        pattern='\d+' // Positive integer pattern
+                        pattern='\d+'
                         name='dimension_x'
                         value={formData.dimension_x}
                         onChange={handleChange}
@@ -251,14 +243,13 @@ const AddBillboard = ({ display, setDisplay, tags, data, update }) => {
                       </Form.Control.Feedback>
                     </Col>
                   </Form.Group>
-
                   <Form.Group as={Col} className='mb-3' controlId='dimension_y'>
-                    <Form.Label>Dimension Y</Form.Label>
+                    <Form.Label>Dimension Y (ft)</Form.Label>
                     <Col sm='10'>
                       <Form.Control
                         required
                         type='number'
-                        pattern='\d+' // Positive integer pattern
+                        pattern='\d+'
                         name='dimension_y'
                         value={formData.dimension_y}
                         onChange={handleChange}
@@ -269,7 +260,7 @@ const AddBillboard = ({ display, setDisplay, tags, data, update }) => {
                     </Col>
                   </Form.Group>
                   <Form.Group as={Col} className='mb-3' controlId='regular'>
-                    <Form.Label>Billoard Type</Form.Label>
+                    <Form.Label>Billboard Type</Form.Label>
                     <Col sm='10'>
                       <Form.Check
                         type='radio'
@@ -282,7 +273,7 @@ const AddBillboard = ({ display, setDisplay, tags, data, update }) => {
                       />
                       <Form.Check
                         type='radio'
-                        label='Bidable  Billboard'
+                        label='Bidable Billboard'
                         name='regular'
                         value={0}
                         checked={formData.regular === 0}
@@ -290,11 +281,10 @@ const AddBillboard = ({ display, setDisplay, tags, data, update }) => {
                         required
                       />
                       <Form.Control.Feedback type='invalid'>
-                        Please select a value for regular.
+                        Please select a value for billboard type.
                       </Form.Control.Feedback>
                     </Col>
                   </Form.Group>
-
                   <Form.Group as={Col} className='mb-3' controlId='tag_id'>
                     <Form.Label>Tag</Form.Label>
                     <Col sm='10'>
@@ -321,11 +311,17 @@ const AddBillboard = ({ display, setDisplay, tags, data, update }) => {
                     />
                   </Form.Group>
                   {!update ? (
-                    <Button disabled={results.isLoading} type='submit'>
+                    <Button
+                      disabled={results.isLoading || isUploading}
+                      type='submit'
+                    >
                       Add
                     </Button>
                   ) : (
-                    <Button disabled={results.isLoading} type='submit'>
+                    <Button
+                      disabled={results.isLoading || isUploading}
+                      type='submit'
+                    >
                       Update
                     </Button>
                   )}

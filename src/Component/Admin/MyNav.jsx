@@ -49,6 +49,11 @@ const MyNav = () => {
                 >
                   Billboards
                 </Nav.Link>
+
+                <Nav.Link as={NavLink} to='/tags' activeClassName='active-link'>
+                  Tags
+                </Nav.Link>
+
                 <Nav.Link
                   as={NavLink}
                   to='/allusers'
